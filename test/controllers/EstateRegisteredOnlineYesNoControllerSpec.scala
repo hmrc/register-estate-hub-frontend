@@ -82,7 +82,7 @@ class EstateRegisteredOnlineYesNoControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(Seq(
             bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
-            bind[SessionRepository].toInstance(sessionRepository)
+            bind[SessionRepository].toInstance(mockPlaybackRepository)
           ))
           .build()
       val request =
