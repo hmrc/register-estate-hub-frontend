@@ -109,7 +109,7 @@ class DeclarationControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(Seq(
           bind[EstatesConnector].to(mockConnector),
-          bind[SessionRepository].toInstance(mockPlaybackRepository)
+          bind[SessionRepository].toInstance(sessionRepository)
         ))
         .build()
 

@@ -46,7 +46,7 @@ class MessagesSpec extends SpecBase {
       messagesApi.messages("en").size mustBe 0
       val englishMessageCount = messagesApi.messages("default").size - commonProvidedKeys.size
 
-      messagesApi.messages("cy").size - commonProvidedKeys.size mustBe englishMessageCount
+      messagesApi.messages("cy").size mustBe englishMessageCount
     }
   }
 

@@ -31,7 +31,7 @@ class IndexControllerSpec extends SpecBase {
     "redirect to AgentOverview with Agent affinityGroup for a GET" in {
       val application = applicationBuilder(userAnswers = None, AffinityGroup.Agent)
         .overrides(Seq(
-          bind[SessionRepository].toInstance(mockPlaybackRepository)
+          bind[SessionRepository].toInstance(sessionRepository)
         ))
         .build()
 
@@ -49,7 +49,7 @@ class IndexControllerSpec extends SpecBase {
     "redirect to EstateRegisteredOnlineYesNoController" in {
       val application = applicationBuilder(userAnswers = None)
         .overrides(Seq(
-          bind[SessionRepository].toInstance(mockPlaybackRepository)
+          bind[SessionRepository].toInstance(sessionRepository)
         ))
         .build()
 

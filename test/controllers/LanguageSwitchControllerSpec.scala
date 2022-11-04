@@ -24,7 +24,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Headers
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 class LanguageSwitchControllerSpec extends SpecBase {
 

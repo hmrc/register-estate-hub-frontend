@@ -107,7 +107,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(Seq(
             bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
-            bind[SessionRepository].toInstance(mockPlaybackRepository)
+            bind[SessionRepository].toInstance(sessionRepository)
           ))
           .build()
 

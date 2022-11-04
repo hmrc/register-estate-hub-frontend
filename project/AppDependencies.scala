@@ -6,7 +6,7 @@ object AppDependencies {
   private lazy val compile = Seq(
     play.sbt.PlayImport.ws,
     "uk.gov.hmrc.mongo"       %% "hmrc-mongo-play-28"             % "0.73.0",
-    "uk.gov.hmrc"             %% "play-frontend-hmrc"             % "3.32.0-play-28",
+    "uk.gov.hmrc"             %% "play-frontend-hmrc"             % "1.1.0-play-28",
     "uk.gov.hmrc"             %% "domain"                         % "8.1.0-play-28",
     "uk.gov.hmrc"             %% "play-conditional-form-mapping"  % "1.12.0-play-28",
     "uk.gov.hmrc"             %% "bootstrap-frontend-play-28"     % "7.8.0",
@@ -15,7 +15,6 @@ object AppDependencies {
 
   private lazy val test: Seq[ModuleID] = Seq(
     "com.typesafe.play"           %% "play-test"                % PlayVersion.current,
-    "org.scalatestplus.play"      %% "scalatestplus-play"       % "5.1.0",
     "uk.gov.hmrc.mongo"           %% "hmrc-mongo-test-play-28"  % "0.73.0",
     "org.scalatestplus"           %% "scalatestplus-scalacheck" % "3.1.0.0-RC2",
     "org.jsoup"                   %  "jsoup"                    % "1.15.3",
