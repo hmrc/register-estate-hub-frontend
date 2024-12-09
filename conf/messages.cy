@@ -54,7 +54,12 @@ timeout.message = Byddwn yn ailosod eich cais os na fyddwch yn ymateb cyn pen
 timeout.keep-alive-button = Yn eich blaen â’r cais
 
 unauthorised.title = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
-unauthorised.heading = Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
+unauthorised.heading = Mae problem wedi codi
+unauthorised.p1 = Gwnaethoch fewngofnodi gan ddefnyddio Dynodydd Defnyddiwr (ID) unigolyn ar gyfer Porth y Llywodraeth.
+unauthorised.p2 = I ddefnyddio’r gwasanaeth hwn, bydd angen Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth arnoch ar gyfer yr ymddiriedolaeth. Gallwch greu un wrth i chi gofrestru ymddiriedolaeth.
+unauthorised.p3 = Mae’n rhaid i chi wneud y naill neu’r llall o’r canlynol:
+unauthorised.bullet1 = allgofnodi a chreu Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth ar gyfer yr ymddiriedolaeth rydych am ei chofrestru
+unauthorised.bullet2 = allgofnodi ac yna mewngofnodi eto gan ddefnyddio Dynodydd Defnyddiwr (ID) yr ymddiriedolaeth ar gyfer Porth y Llywodraeth, os oes gan yr ymddiriedolaeth un yn barod
 
 featureNotAvailable.title = Nid yw rhan hon y gwasanaeth ar-lein ar gael eto
 featureNotAvailable.heading = Nid yw rhan hon y gwasanaeth ar-lein ar gael eto
