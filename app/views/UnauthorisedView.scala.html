@@ -14,18 +14,23 @@
  * limitations under the License.
  *@
 
-    @import views.html.components.{Heading, BulletList}
+    @import config.FrontendAppConfig
+    @import views.html.components.{Heading, BulletList, SubmitButton}
 
 @this(
     main_template: MainTemplate,
     heading: Heading,
-    bulletList: BulletList
+    bulletList: BulletList,
+    appConfig: FrontendAppConfig,
+    formHelper: FormWithCSRF,
+    submitButton: SubmitButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("unauthorised.title")
+    title = messages("unauthorised.title"),
+    canSignOut = false
 ) {
 
     @heading("unauthorised.heading")
@@ -42,4 +47,7 @@
         )
     )
 
+    @formHelper(action = UnauthorisedController.onSubmit, Symbol("autoComplete") -> "off") {
+        @submitButton(Some(messages("site.sign_out")))
+    }
 }
