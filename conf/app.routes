@@ -58,3 +58,6 @@ POST       /agent-overview                              controllers.AgentOvervie
 
 GET        /draft-answers                               controllers.DraftAnswersController.onPageLoad()
 GET        /declared-answers                            controllers.DeclaredAnswersController.onPageLoad()
+
+GET        /sign-out-confirmed                          controllers.SignOutConfirmationController.onPageLoad
+POST       /sign-out-confirmed                          controllers.SignOutConfirmationController.onSubmit

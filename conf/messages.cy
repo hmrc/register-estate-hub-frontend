@@ -223,3 +223,6 @@ deceasedPerson.address.checkYourAnswersLabel = Beth yw cyfeiriad hysbys diwethaf
 
 taxLiability.neededToPayTax.checkYourAnswersLabel = A oedd angen i’r ymddiriedolaeth dalu unrhyw dreth o {0} i {1}?
 taxLiability.wasTaxDeclared.checkYourAnswersLabel = A gafodd y dreth o {0} i {1} ei datgan?
+
+sign_out.title = You have been signed out
+sign_out.heading = You have been signed out
