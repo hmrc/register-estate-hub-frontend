@@ -15,14 +15,13 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.{Heading, SubmitButton}
+@import views.html.components.{Heading, Link}
 
 @this(
     main_template: MainTemplate,
-    appConfig: FrontendAppConfig,
-    formHelper: FormWithCSRF,
+    config: FrontendAppConfig,
     heading: Heading,
-    submitButton: SubmitButton
+    link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -35,7 +34,9 @@
 
     @heading("sign_out.heading")
 
-    @formHelper(action = SignOutConfirmationController.onSubmit, Symbol("autoComplete") -> "off") {
-        @submitButton(Some(messages("site.sign_in")))
-    }
+    <p>@messages("sign_out.p1")
+        @link(config.guidanceUrl, "guidanceUrl", "sign_out.link", true).
+    </p>
+
+    <p>@messages("sign_out.p2")</p>
 }

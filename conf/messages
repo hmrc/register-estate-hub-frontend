@@ -231,5 +231,8 @@ deceasedPerson.address.checkYourAnswersLabel = What is {0}’s last known addres
 taxLiability.neededToPayTax.checkYourAnswersLabel = Did the estate need to pay any tax from {0} to {1}?
 taxLiability.wasTaxDeclared.checkYourAnswersLabel = Was the tax from {0} to {1} declared?
 
-sign_out.title = You have been signed out
-sign_out.heading = You have been signed out
+sign_out.title = You have signed out
+sign_out.heading = You have signed out
+sign_out.p1 = You can
+sign_out.link = register or sign in to manage an estate
+sign_out.p2 = You can create a new Government Gateway user ID for the estate when you register the estate.
