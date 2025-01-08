@@ -224,8 +224,8 @@ deceasedPerson.address.checkYourAnswersLabel = Beth yw cyfeiriad hysbys diwethaf
 taxLiability.neededToPayTax.checkYourAnswersLabel = A oedd angen i’r ymddiriedolaeth dalu unrhyw dreth o {0} i {1}?
 taxLiability.wasTaxDeclared.checkYourAnswersLabel = A gafodd y dreth o {0} i {1} ei datgan?
 
-sign_out.title = You have signed out
-sign_out.heading = You have signed out
-sign_out.p1 = You can
-sign_out.link = register or sign in to manage an estate
-sign_out.p2 = You can create a new Government Gateway user ID for the estate when you register the estate.
+sign_out.title = Rydych wedi allgofnodi
+sign_out.heading = Rydych wedi allgofnodi
+sign_out.p1 = Gallwch
+sign_out.link = mewngofnodi i gofrestru neu reoli ystâd
+sign_out.p2 = Gallwch greu Dynodydd Defnyddiwr (ID) newydd ar gyfer Porth y Llywodraeth ar gyfer yr ystâd pan fyddwch yn cofrestru’r ystâd.
