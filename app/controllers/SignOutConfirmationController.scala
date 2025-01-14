@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
