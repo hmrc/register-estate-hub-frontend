@@ -92,9 +92,9 @@ class TaskListControllerSpec extends SpecBase {
       "no tasks completed" in {
 
         val sections = List(
-          Task(Link(EstateName, estateDetailsRoute),InProgress),
-          Task(Link(PersonalRepresentative, personalRepRoute),InProgress),
-          Task(Link(PersonWhoDied, deceasedPersonsRoute),InProgress)
+          Task(Link(EstateName, estateDetailsRoute),Incomplete),
+          Task(Link(PersonalRepresentative, personalRepRoute),Incomplete),
+          Task(Link(PersonWhoDied, deceasedPersonsRoute),Incomplete)
         )
 
         when(mockRepository.set(any())).thenReturn(Future.successful(true))

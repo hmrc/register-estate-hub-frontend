@@ -58,21 +58,13 @@ class TaskListController @Inject()(
        isLiableForTax <- getIsLiableForTax
         tasks <- storeConnector.getStatusOfTasks
       } yield {
-        for {
-          user <- repository.get(request.internalId)
-        }yield {
-          println("---------------")
-          println(user)
-        }
-
-        println("response --------",tasks)
         tasks match {
           case l @ CompletedTasks(_, _, _, _) =>
             val taskList = generateTaskList(l, isLiableForTax)
 
               Ok(view(
                 estateName = estateName,
-                sections = taskList.mandatory ++ taskList.other,
+                sections = taskList.mandatory,
                 isTaskListComplete = taskList.isAbleToDeclare,
                 affinityGroup = request.affinityGroup))
 
@@ -81,7 +73,6 @@ class TaskListController @Inject()(
             InternalServerError(errorHandler.internalServerErrorTemplate)
         }
       }
-
   }
 
   def onSubmit: Action[AnyContent] = Action {

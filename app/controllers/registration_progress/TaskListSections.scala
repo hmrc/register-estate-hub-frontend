@@ -17,15 +17,15 @@
 package controllers.registration_progress
 
 import config.FrontendAppConfig
-import models.TagStatus.InProgress
+import models.TagStatus.Incomplete
 import models.{CompletedTasks, TagStatus}
 import viewmodels.tasks.{EstateName, PersonWhoDied, PersonalRepresentative, YearsOfTaxLiability}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {
 
-  case class TaskList(mandatory: List[Task], other: List[Task]) {
-    val isAbleToDeclare : Boolean = !(mandatory ::: other).exists(_.tag == InProgress)
+  case class TaskList(mandatory: List[Task]) {
+    val isAbleToDeclare : Boolean = !mandatory.exists(_.tag == Incomplete)
   }
 
   private lazy val notYetAvailable: String =
@@ -69,34 +69,21 @@ trait TaskListSections {
     val mandatorySections = List(
       Task(
         Link(EstateName, estateDetailsRoute),
-        TagStatus.tagFor(tasks.details, config.estateDetailsEnabled, false)
+        TagStatus.tagFor(tasks.details, config.estateDetailsEnabled, false, None)
       ),
       Task(
         Link(PersonalRepresentative, personalRepRoute),
-        TagStatus.tagFor(tasks.personalRepresentative, config.personalRepEnabled,false)
+        TagStatus.tagFor(tasks.personalRepresentative, config.personalRepEnabled, false, None)
       ),
       Task(
         Link(PersonWhoDied, deceasedPersonsRoute),
-        TagStatus.tagFor(tasks.deceased, config.deceasedPersonsEnabled, false)
+        TagStatus.tagFor(tasks.deceased, config.deceasedPersonsEnabled, false, None)
       ),
       Task(
         Link(YearsOfTaxLiability, registerTaxRoute),
-        TagStatus.tagFor(tasks.yearsOfTaxLiability, config.registerTaxEnabled,tasks.deceased)
+        TagStatus.tagFor(tasks.yearsOfTaxLiability, config.registerTaxEnabled, enableTaxLiability, Some("taxLiability"))
       )
     )
-
-//    val optionalSections = if (enableTaxLiability) {
-//      List(
-//        Task(
-//          Link(YearsOfTaxLiability, registerTaxRoute),
-//          TagStatus.tagFor(tasks.yearsOfTaxLiability, config.registerTaxEnabled)
-//        )
-//      )
-//    } else {
-//      Nil
-//    }
-
-    TaskList(mandatorySections, Nil)
+    TaskList(mandatorySections)
   }
-
 }
