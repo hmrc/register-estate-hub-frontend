@@ -69,30 +69,34 @@ trait TaskListSections {
     val mandatorySections = List(
       Task(
         Link(EstateName, estateDetailsRoute),
-        TagStatus.tagFor(tasks.details, config.estateDetailsEnabled)
+        TagStatus.tagFor(tasks.details, config.estateDetailsEnabled, false)
       ),
       Task(
         Link(PersonalRepresentative, personalRepRoute),
-        TagStatus.tagFor(tasks.personalRepresentative, config.personalRepEnabled)
+        TagStatus.tagFor(tasks.personalRepresentative, config.personalRepEnabled,false)
       ),
       Task(
         Link(PersonWhoDied, deceasedPersonsRoute),
-        TagStatus.tagFor(tasks.deceased, config.deceasedPersonsEnabled)
+        TagStatus.tagFor(tasks.deceased, config.deceasedPersonsEnabled, false)
+      ),
+      Task(
+        Link(YearsOfTaxLiability, registerTaxRoute),
+        TagStatus.tagFor(tasks.yearsOfTaxLiability, config.registerTaxEnabled,tasks.deceased)
       )
     )
 
-    val optionalSections = if (enableTaxLiability) {
-      List(
-        Task(
-          Link(YearsOfTaxLiability, registerTaxRoute),
-          TagStatus.tagFor(tasks.yearsOfTaxLiability, config.registerTaxEnabled)
-        )
-      )
-    } else {
-      Nil
-    }
+//    val optionalSections = if (enableTaxLiability) {
+//      List(
+//        Task(
+//          Link(YearsOfTaxLiability, registerTaxRoute),
+//          TagStatus.tagFor(tasks.yearsOfTaxLiability, config.registerTaxEnabled)
+//        )
+//      )
+//    } else {
+//      Nil
+//    }
 
-    TaskList(mandatorySections, optionalSections)
+    TaskList(mandatorySections, Nil)
   }
 
 }

@@ -24,6 +24,13 @@ object TagStatus extends Enumerable.Implicits {
 
   case object InProgress extends WithName("in-progress") with TagStatus
 
+  case object Incomplete extends WithName("incomplete") with TagStatus
+
+  case object CannotStartYet extends WithName("cannot-start-yet") with TagStatus
+
+  case object NoActionNeeded extends WithName("no-action-needed") with TagStatus
+
+
   val values: Set[TagStatus] = Set(
     Completed, InProgress
   )
@@ -31,11 +38,12 @@ object TagStatus extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[TagStatus] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 
-  def tagFor(upToDate: Boolean, featureEnabled: Boolean) : TagStatus = {
+  def tagFor(upToDate: Boolean, featureEnabled: Boolean, enableTaxLiability : Boolean) : TagStatus = {
     if (upToDate || !featureEnabled) {
       Completed
-    } else {
-      InProgress
+    } else if(!upToDate || enableTaxLiability){
+      Incomplete
+  } else{
+      CannotStartYet
     }
-  }
-}
+}}
