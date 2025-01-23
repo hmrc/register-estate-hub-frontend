@@ -69,21 +69,21 @@ trait TaskListSections {
     val mandatorySections = List(
       Task(
         Link(EstateName, estateDetailsRoute),
-        TagStatus.tagFor(tasks.details, config.estateDetailsEnabled, false, None)
+        TagStatus.tagFor(tasks.details, config.estateDetailsEnabled)
       ),
       Task(
         Link(PersonalRepresentative, personalRepRoute),
-        TagStatus.tagFor(tasks.personalRepresentative, config.personalRepEnabled, false, None)
+        TagStatus.tagFor(tasks.personalRepresentative, config.personalRepEnabled)
       ),
       Task(
         Link(PersonWhoDied, deceasedPersonsRoute),
-        TagStatus.tagFor(tasks.deceased, config.deceasedPersonsEnabled, false, None)
+        TagStatus.tagFor(tasks.deceased, config.deceasedPersonsEnabled)
       ),
       Task(
         Link(YearsOfTaxLiability, registerTaxRoute),
-        TagStatus.tagFor(tasks.yearsOfTaxLiability, config.registerTaxEnabled, enableTaxLiability, Some("taxLiability"))
+        TagStatus.tagForTaxLiability(tasks.yearsOfTaxLiability, config.registerTaxEnabled, enableTaxLiability,tasks.deceased
       )
-    )
+    ))
     TaskList(mandatorySections)
   }
 }
