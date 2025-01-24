@@ -95,7 +95,7 @@ class TaskListControllerSpec extends SpecBase {
           Task(Link(EstateName, estateDetailsRoute),Incomplete),
           Task(Link(PersonalRepresentative, personalRepRoute),Incomplete),
           Task(Link(PersonWhoDied, deceasedPersonsRoute),Incomplete),
-          Task(Link(YearsOfTaxLiability,registerTaxRoute ),Incomplete)
+          Task(Link(YearsOfTaxLiability,registerTaxRoute ),CannotStartYet)
         )
 
         when(mockRepository.set(any())).thenReturn(Future.successful(true))
