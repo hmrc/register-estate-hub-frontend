@@ -94,7 +94,8 @@ class TaskListControllerSpec extends SpecBase {
         val sections = List(
           Task(Link(EstateName, estateDetailsRoute),Incomplete),
           Task(Link(PersonalRepresentative, personalRepRoute),Incomplete),
-          Task(Link(PersonWhoDied, deceasedPersonsRoute),Incomplete)
+          Task(Link(PersonWhoDied, deceasedPersonsRoute),Incomplete),
+          Task(Link(YearsOfTaxLiability,registerTaxRoute ),Incomplete)
         )
 
         when(mockRepository.set(any())).thenReturn(Future.successful(true))
