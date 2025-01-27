@@ -100,11 +100,11 @@ taskList.yearsOfTaxLiability.label = Blynyddoedd rhwymedigaeth treth
 taskList.yearOfTaxLiability.label = Rhwymedigaeth treth {0} i {1}
 
 taskList.in-progress = Wrthi’n llenwi
-taskList.completed = Wedi’i gwblhau
+taskList.completed = Wedi cwblhau
 taskList.not-started = Heb ddechrau
 taskList.cannot-start-yet = Methu dechrau eto
 taskList.no-action-needed = Dim angen gweithredu
-taskList.incomplete = Incomplete
+taskList.incomplete = Anghyflawn
 
 declaration.title = Datganiad
 declaration.heading = Datganiad
