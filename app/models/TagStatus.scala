@@ -22,8 +22,6 @@ object TagStatus extends Enumerable.Implicits {
 
   case object Completed extends WithName("completed") with TagStatus
 
-  case object InProgress extends WithName("in-progress") with TagStatus
-
   case object Incomplete extends WithName("incomplete") with TagStatus
 
   case object CannotStartYet extends WithName("cannot-start-yet") with TagStatus
