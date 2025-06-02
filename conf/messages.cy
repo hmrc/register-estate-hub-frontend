@@ -173,7 +173,7 @@ doNotNeedToRegister.contact.link = cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg C
 agentOverview.title = Cofrestru ystâd a’i chynnal ar ran cleient
 agentOverview.heading = Cofrestru ystâd a’i chynnal ar ran cleient
 agentOverview.paragraph1 = Ni allwch gadw’ch cofrestriad a dod yn ôl yn nes ymlaen. Os nad ydych yn cwblhau’r cofrestriad hwn nawr, ni fydd eich gwybodaeth yn cael ei chadw.
-agentOverview.paragraph2 = Os oes angen i chi gynnal ystâd sydd eisoes wedi’i chofrestru ar-lein, ni chaiff unrhyw newidiadau a wnewch eu cadw.
+agentOverview.paragraph2 = Os oes angen i chi reoli ystâd sydd eisoes wedi’i chofrestru ar-lein, ni chaiff unrhyw newidiadau a wnewch eu cadw.
 agentOverview.start = Dechrau nawr
 
 declaredAnswers.title = Copi wedi’i ddatgan o gofrestriad yr ystâd
