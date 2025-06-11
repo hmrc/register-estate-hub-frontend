@@ -26,6 +26,7 @@ import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.viewmodels.cookiebanner.Action
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.TaskListView
 
@@ -70,7 +71,8 @@ class TaskListController @Inject()(
 
           case CompletedTasksResponse.InternalServerError =>
             logger.error(s"[TaskListController] unable to get tasks statuses")
-            InternalServerError(errorHandler.internalServerErrorTemplate)
+            //InternalServerError(errorHandler.internalServerErrorTemplate)
+           errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
         }
       }
   }
