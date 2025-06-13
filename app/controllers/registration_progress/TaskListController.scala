@@ -54,7 +54,7 @@ class TaskListController @Inject()(
 
       def taskList(estateName: Option[String], isLiableForTax: Boolean, tasks: CompletedTasksResponse): Future[Result] = {
         tasks match {
-          case l@CompletedTasks(_, _, _, _) =>
+          case l @ CompletedTasks(_, _, _, _) =>
             val taskList = generateTaskList(l, isLiableForTax)
             Future.successful(Ok(view(
               estateName = estateName,
