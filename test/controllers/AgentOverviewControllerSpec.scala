@@ -26,7 +26,7 @@ import views.html.AgentOverviewView
 class AgentOverviewControllerSpec extends SpecBase {
 
   lazy val agentOverviewRoute: String = routes.AgentOverviewController.onSubmit().url
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+  val appConfig: FrontendAppConfig    = injector.instanceOf[FrontendAppConfig]
 
   "AgentOverview Controller" must {
 
@@ -68,4 +68,5 @@ class AgentOverviewControllerSpec extends SpecBase {
     }
 
   }
+
 }

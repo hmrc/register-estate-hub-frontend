@@ -18,8 +18,7 @@ package utils
 
 object AccessibilityHelper {
 
-  def formatReferenceNumber(referenceNumber: String): String = {
+  def formatReferenceNumber(referenceNumber: String): String =
     referenceNumber.replace(" ", "").replace("", " ").trim()
-  }
 
 }

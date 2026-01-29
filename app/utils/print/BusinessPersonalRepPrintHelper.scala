@@ -23,18 +23,17 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class BusinessPersonalRepPrintHelper @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
+class BusinessPersonalRepPrintHelper @Inject() (checkAnswersFormatters: CheckAnswersFormatters) {
 
   def apply(business: BusinessPersonalRep)(implicit messages: Messages): AnswerSection = {
     val converter = AnswerRowConverter(business.name)(checkAnswersFormatters)
 
-    def name(utr: Option[String]): Seq[AnswerRow] = {
+    def name(utr: Option[String]): Seq[AnswerRow] =
       Seq(
         Some(converter.yesNoQuestion(boolean = utr.isDefined, "personalRep.business.ukRegisteredYesNo")),
         Some(converter.stringQuestion(business.name, "personalRep.business.name")),
         converter.optionStringQuestion(utr, "personalRep.business.utr")
       ).flatten
-    }
 
     def address(address: Address): Seq[AnswerRow] = {
       def answerRow(isUk: Boolean, address: Address): Seq[AnswerRow] = Seq(
@@ -43,19 +42,18 @@ class BusinessPersonalRepPrintHelper @Inject()(checkAnswersFormatters: CheckAnsw
       )
 
       address match {
-        case address: UkAddress =>
+        case address: UkAddress    =>
           answerRow(isUk = true, address)
         case address: NonUkAddress =>
           answerRow(isUk = false, address)
       }
     }
 
-    def email(email: Option[String]): Seq[AnswerRow] = {
+    def email(email: Option[String]): Seq[AnswerRow] =
       Seq(
         Some(converter.yesNoQuestion(boolean = email.isDefined, "personalRep.business.emailYesNo")),
         converter.optionStringQuestion(email, "personalRep.business.email")
       ).flatten
-    }
 
     val rows: Seq[AnswerRow] =
       Seq(converter.stringQuestion(messages("individualOrBusiness.business"), "personalRep.individualOrBusiness")) ++
@@ -66,4 +64,5 @@ class BusinessPersonalRepPrintHelper @Inject()(checkAnswersFormatters: CheckAnsw
 
     AnswerSection(Some("taskList.personalRepresentative.label"), rows)
   }
+
 }

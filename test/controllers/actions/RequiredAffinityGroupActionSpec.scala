@@ -30,12 +30,10 @@ import scala.concurrent.Future
 
 class RequiredAffinityGroupActionSpec extends SpecBase with MockitoSugar with ScalaFutures with EitherValues {
 
-  class Harness[T]()
-    extends RequiredAgentAffinityGroupAction() {
+  class Harness[T]() extends RequiredAgentAffinityGroupAction() {
 
     def callFilter[A](request: IdentifierRequest[A]): Future[Option[Result]] = filter(request)
   }
-
 
   "Required Affinity Group Action" when {
 
@@ -43,8 +41,9 @@ class RequiredAffinityGroupActionSpec extends SpecBase with MockitoSugar with Sc
 
       "continue with returning None" in {
 
-        val action = new Harness()
-        val futureResult = action.callFilter(IdentifierRequest(fakeRequest, "id", AffinityGroup.Agent, Enrolments(Set.empty[Enrolment])))
+        val action       = new Harness()
+        val futureResult =
+          action.callFilter(IdentifierRequest(fakeRequest, "id", AffinityGroup.Agent, Enrolments(Set.empty[Enrolment])))
 
         whenReady(futureResult) { result =>
           result mustBe None
@@ -57,8 +56,10 @@ class RequiredAffinityGroupActionSpec extends SpecBase with MockitoSugar with Sc
 
       "redirect to Unauthorised page" in {
 
-        val action = new Harness()
-        val futureResult = action.callFilter(IdentifierRequest(fakeRequest, "id", AffinityGroup.Organisation, Enrolments(Set.empty[Enrolment])))
+        val action       = new Harness()
+        val futureResult = action.callFilter(
+          IdentifierRequest(fakeRequest, "id", AffinityGroup.Organisation, Enrolments(Set.empty[Enrolment]))
+        )
 
         whenReady(futureResult) { result =>
           result.value.header.headers(HeaderNames.LOCATION) mustBe UnauthorisedController.onPageLoad.url

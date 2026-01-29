@@ -31,46 +31,43 @@ import views.html.EstateRegisteredOnlineYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EstateRegisteredOnlineYesNoController @Inject()(
-                                                  override val messagesApi: MessagesApi,
-                                                  sessionRepository: SessionRepository,
-                                                  @EstateRegistration navigator: Navigator,
-                                                  identify: IdentifierAction,
-                                                  getData: DataRetrievalAction,
-                                                  requireData: DataRequiredAction,
-                                                  formProvider: YesNoFormProvider,
-                                                  val controllerComponents: MessagesControllerComponents,
-                                                  view: EstateRegisteredOnlineYesNoView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class EstateRegisteredOnlineYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  @EstateRegistration navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: EstateRegisteredOnlineYesNoView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private def actions() = identify andThen getData andThen requireData
 
   val form: Form[Boolean] = formProvider.withPrefix("estateRegisteredOnlineYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions() {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions() { implicit request =>
+    val preparedForm = request.userAnswers.get(EstateRegisteredOnlineYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(EstateRegisteredOnlineYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm))
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = actions().async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
-
-        value => {
+  def onSubmit(): Action[AnyContent] = actions().async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Future.successful(BadRequest(view(formWithErrors))),
+        value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(EstateRegisteredOnlineYesNoPage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(EstateRegisteredOnlineYesNoPage, updatedAnswers))
-        }
       )
   }
+
 }

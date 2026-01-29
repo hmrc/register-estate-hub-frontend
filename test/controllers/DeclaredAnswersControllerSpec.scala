@@ -36,19 +36,19 @@ import scala.concurrent.Future
 
 class DeclaredAnswersControllerSpec extends SpecBase {
 
-  val fakeTrn = "XC TRN 000 000 4912"
+  val fakeTrn                           = "XC TRN 000 000 4912"
   val fakeSubmissionDate: LocalDateTime = LocalDateTime.of(2020, 1, 27, 0, 0)
 
-  val estateName: String = "Estate of John Doe"
-  val name: Name = Name("John", None, "Doe")
-  val dateOfBirth: LocalDate = LocalDate.parse("2000-02-03")
-  val dateOfDeath: LocalDate = LocalDate.parse("2019-02-03")
+  val estateName: String            = "Estate of John Doe"
+  val name: Name                    = Name("John", None, "Doe")
+  val dateOfBirth: LocalDate        = LocalDate.parse("2000-02-03")
+  val dateOfDeath: LocalDate        = LocalDate.parse("2019-02-03")
   val nino: NationalInsuranceNumber = NationalInsuranceNumber("AA000000A")
-  val ukAddress: UkAddress = UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE")
-  val nonUkAddress: NonUkAddress = NonUkAddress("99 Test Lane", "Testville", None, "DE")
-  val passport: Passport = Passport("GB", "1234567890", LocalDate.parse("2023-02-03"))
-  val idCard: IdCard = IdCard("GB", "1234567890", LocalDate.parse("2023-02-03"))
-  val phoneNumber: String = "+447123456789"
+  val ukAddress: UkAddress          = UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE")
+  val nonUkAddress: NonUkAddress    = NonUkAddress("99 Test Lane", "Testville", None, "DE")
+  val passport: Passport            = Passport("GB", "1234567890", LocalDate.parse("2023-02-03"))
+  val idCard: IdCard                = IdCard("GB", "1234567890", LocalDate.parse("2023-02-03"))
+  val phoneNumber: String           = "+447123456789"
 
   val registration: EstateRegistrationNoDeclaration = EstateRegistrationNoDeclaration(
     matchData = None,
@@ -93,14 +93,19 @@ class DeclaredAnswersControllerSpec extends SpecBase {
     "return OK and the correct view for a GET" in {
 
       val userAnswers = emptyUserAnswers
-        .set(TRNPage, fakeTrn).success.value
-        .set(SubmissionDatePage, fakeSubmissionDate).success.value
+        .set(TRNPage, fakeTrn)
+        .success
+        .value
+        .set(SubmissionDatePage, fakeSubmissionDate)
+        .success
+        .value
 
       val entities = injector.instanceOf[RegistrationAnswersPrintHelper]
 
       when(mockConnector.getRegistration()(any(), any())).thenReturn(Future.successful(registration))
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[EstatesConnector].to(mockConnector)).build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[EstatesConnector].to(mockConnector)).build()
 
       val request = FakeRequest(GET, routes.DeclaredAnswersController.onPageLoad().url)
 

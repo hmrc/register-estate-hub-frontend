@@ -27,12 +27,13 @@ class IndexControllerSpec extends SpecBase {
 
   "Index Controller" must {
 
-
     "redirect to AgentOverview with Agent affinityGroup for a GET" in {
       val application = applicationBuilder(userAnswers = None, AffinityGroup.Agent)
-        .overrides(Seq(
-          bind[SessionRepository].toInstance(sessionRepository)
-        ))
+        .overrides(
+          Seq(
+            bind[SessionRepository].toInstance(sessionRepository)
+          )
+        )
         .build()
 
       val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
@@ -48,9 +49,11 @@ class IndexControllerSpec extends SpecBase {
 
     "redirect to EstateRegisteredOnlineYesNoController" in {
       val application = applicationBuilder(userAnswers = None)
-        .overrides(Seq(
-          bind[SessionRepository].toInstance(sessionRepository)
-        ))
+        .overrides(
+          Seq(
+            bind[SessionRepository].toInstance(sessionRepository)
+          )
+        )
         .build()
 
       val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
@@ -64,4 +67,5 @@ class IndexControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

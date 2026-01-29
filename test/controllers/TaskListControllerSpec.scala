@@ -36,15 +36,15 @@ import scala.concurrent.Future
 
 class TaskListControllerSpec extends SpecBase {
 
-  private val estateDetailsRoute: String = "http://localhost:8823/register-an-estate/details"
-  private val personalRepRoute: String = "http://localhost:8825/register-an-estate/personal-representative"
+  private val estateDetailsRoute: String   = "http://localhost:8823/register-an-estate/details"
+  private val personalRepRoute: String     = "http://localhost:8825/register-an-estate/personal-representative"
   private val deceasedPersonsRoute: String = "http://localhost:8824/register-an-estate/deceased-person"
-  private val registerTaxRoute: String = "http://localhost:8827/register-an-estate/tax-liability"
+  private val registerTaxRoute: String     = "http://localhost:8827/register-an-estate/tax-liability"
 
-  private val mockRepository : SessionRepository = mock[SessionRepository]
+  private val mockRepository: SessionRepository = mock[SessionRepository]
 
   private val mockEstatesStoreConnector: EstatesStoreConnector = mock[EstatesStoreConnector]
-  private val mockEstatesConnector: EstatesConnector = mock[EstatesConnector]
+  private val mockEstatesConnector: EstatesConnector           = mock[EstatesConnector]
 
   "TaskList Controller" must {
 
@@ -62,18 +62,24 @@ class TaskListControllerSpec extends SpecBase {
         when(mockRepository.set(any())).thenReturn(Future.successful(true))
 
         when(mockEstatesStoreConnector.getStatusOfTasks(any(), any()))
-          .thenReturn(Future.successful(CompletedTasks(details = true, personalRepresentative = true, deceased = true, yearsOfTaxLiability = true)))
+          .thenReturn(
+            Future.successful(
+              CompletedTasks(details = true, personalRepresentative = true, deceased = true, yearsOfTaxLiability = true)
+            )
+          )
 
         when(mockEstatesConnector.getEstateName()(any(), any())).thenReturn(Future.successful(None))
 
         when(mockEstatesConnector.getIsLiableForTax()(any(), any())).thenReturn(Future.successful(true))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(Seq(
-            bind(classOf[EstatesStoreConnector]).toInstance(mockEstatesStoreConnector),
-            bind(classOf[EstatesConnector]).toInstance(mockEstatesConnector),
-            bind[SessionRepository].toInstance(mockRepository)
-          ))
+          .overrides(
+            Seq(
+              bind(classOf[EstatesStoreConnector]).toInstance(mockEstatesStoreConnector),
+              bind(classOf[EstatesConnector]).toInstance(mockEstatesConnector),
+              bind[SessionRepository].toInstance(mockRepository)
+            )
+          )
           .build()
 
         val request = FakeRequest(GET, controllers.registration_progress.routes.TaskListController.onPageLoad().url)
@@ -93,26 +99,37 @@ class TaskListControllerSpec extends SpecBase {
       "no tasks completed" in {
 
         val sections = List(
-          Task(Link(EstateName, estateDetailsRoute),Incomplete),
-          Task(Link(PersonalRepresentative, personalRepRoute),Incomplete),
-          Task(Link(PersonWhoDied, deceasedPersonsRoute),Incomplete),
-          Task(Link(YearsOfTaxLiability,registerTaxRoute ),CannotStartYet)
+          Task(Link(EstateName, estateDetailsRoute), Incomplete),
+          Task(Link(PersonalRepresentative, personalRepRoute), Incomplete),
+          Task(Link(PersonWhoDied, deceasedPersonsRoute), Incomplete),
+          Task(Link(YearsOfTaxLiability, registerTaxRoute), CannotStartYet)
         )
 
         when(mockRepository.set(any())).thenReturn(Future.successful(true))
 
         when(mockEstatesStoreConnector.getStatusOfTasks(any(), any()))
-          .thenReturn(Future.successful(CompletedTasks(details = false, personalRepresentative = false, deceased = false, yearsOfTaxLiability = false)))
+          .thenReturn(
+            Future.successful(
+              CompletedTasks(
+                details = false,
+                personalRepresentative = false,
+                deceased = false,
+                yearsOfTaxLiability = false
+              )
+            )
+          )
 
         when(mockEstatesConnector.getEstateName()(any(), any())).thenReturn(Future.successful(None))
         when(mockEstatesConnector.getIsLiableForTax()(any(), any())).thenReturn(Future.successful(false))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(Seq(
-            bind(classOf[EstatesStoreConnector]).toInstance(mockEstatesStoreConnector),
-            bind(classOf[EstatesConnector]).toInstance(mockEstatesConnector),
-            bind[SessionRepository].toInstance(mockRepository)
-          ))
+          .overrides(
+            Seq(
+              bind(classOf[EstatesStoreConnector]).toInstance(mockEstatesStoreConnector),
+              bind(classOf[EstatesConnector]).toInstance(mockEstatesConnector),
+              bind[SessionRepository].toInstance(mockRepository)
+            )
+          )
           .build()
 
         val request = FakeRequest(GET, controllers.registration_progress.routes.TaskListController.onPageLoad().url)
@@ -132,7 +149,6 @@ class TaskListControllerSpec extends SpecBase {
 
     "return InternalServerError when error retrieving tasks statuses" in {
 
-
       when(mockEstatesStoreConnector.getStatusOfTasks(any(), any()))
         .thenReturn(Future.successful(InternalServerError))
 
@@ -141,11 +157,13 @@ class TaskListControllerSpec extends SpecBase {
       when(mockRepository.set(any())).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(Seq(
-          bind[SessionRepository].toInstance(mockRepository),
-          bind(classOf[EstatesStoreConnector]).toInstance(mockEstatesStoreConnector),
-          bind(classOf[EstatesConnector]).toInstance(mockEstatesConnector)
-        ))
+        .overrides(
+          Seq(
+            bind[SessionRepository].toInstance(mockRepository),
+            bind(classOf[EstatesStoreConnector]).toInstance(mockEstatesStoreConnector),
+            bind(classOf[EstatesConnector]).toInstance(mockEstatesConnector)
+          )
+        )
         .build()
 
       val request = FakeRequest(GET, controllers.registration_progress.routes.TaskListController.onPageLoad().url)
@@ -157,4 +175,5 @@ class TaskListControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

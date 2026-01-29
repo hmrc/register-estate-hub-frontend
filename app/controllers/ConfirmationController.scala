@@ -30,27 +30,26 @@ import views.html.ConfirmationView
 
 import scala.concurrent.ExecutionContext
 
-class ConfirmationController @Inject()(
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: ConfirmationView,
-                                        connector: EstatesConnector,
-                                        actions: Actions,
-                                        errorHandler: ErrorHandler
-                                      )(implicit ec: ExecutionContext
-) extends FrontendBaseController with I18nSupport with Logging {
+class ConfirmationController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  view: ConfirmationView,
+  connector: EstatesConnector,
+  actions: Actions,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad: Action[AnyContent] = actions.authWithData.async {
-    implicit request =>
-
-      request.userAnswers.get(TRNPage).fold {
+  def onPageLoad: Action[AnyContent] = actions.authWithData.async { implicit request =>
+    request.userAnswers
+      .get(TRNPage)
+      .fold {
         logger.error(s"[Session ID: ${Session.id(hc)}] no TRN in user answers, cannot render confirmation")
         errorHandler.onServerError(request, new Exception("TRN is not available for completed estate."))
-      }{
-        trn =>
-          connector.getPersonalRepName().map {
-            name =>
-              Ok(view(trn, name.name))
-          }
+      } { trn =>
+        connector.getPersonalRepName().map { name =>
+          Ok(view(trn, name.name))
+        }
       }
   }
+
 }

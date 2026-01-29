@@ -31,53 +31,56 @@ import views.html.TaskListView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TaskListController @Inject()(
-                                    actions: Actions,
-                                    val controllerComponents: MessagesControllerComponents,
-                                    val config: FrontendAppConfig,
-                                    view: TaskListView,
-                                    connector: EstatesConnector,
-                                    storeConnector: EstatesStoreConnector,
-                                    errorHandler: ErrorHandler,
-                                    repository: SessionRepository
-                                  )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with TaskListSections with Logging {
+class TaskListController @Inject() (
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  val config: FrontendAppConfig,
+  view: TaskListView,
+  connector: EstatesConnector,
+  storeConnector: EstatesStoreConnector,
+  errorHandler: ErrorHandler,
+  repository: SessionRepository
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with TaskListSections with Logging {
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithSession.async {
-    implicit request =>
-      def continueOrCreateNewSession =
-        request.userAnswers.getOrElse(UserAnswers(request.internalId))
+  def onPageLoad(): Action[AnyContent] = actions.authWithSession.async { implicit request =>
+    def continueOrCreateNewSession =
+      request.userAnswers.getOrElse(UserAnswers(request.internalId))
 
-      def getEstateName = connector.getEstateName()
+    def getEstateName = connector.getEstateName()
 
-      def getIsLiableForTax = connector.getIsLiableForTax()
+    def getIsLiableForTax = connector.getIsLiableForTax()
 
-      def taskList(estateName: Option[String], isLiableForTax: Boolean, tasks: CompletedTasksResponse): Future[Result] = {
-        tasks match {
-          case l @ CompletedTasks(_, _, _, _) =>
-            val taskList = generateTaskList(l, isLiableForTax)
-            Future.successful(Ok(view(
-              estateName = estateName,
-              sections = taskList.mandatory,
-              isTaskListComplete = taskList.isAbleToDeclare,
-              affinityGroup = request.affinityGroup)))
-          case CompletedTasksResponse.InternalServerError =>
-            logger.error(s"[TaskListController] unable to get tasks statuses")
-            errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
-        }
+    def taskList(estateName: Option[String], isLiableForTax: Boolean, tasks: CompletedTasksResponse): Future[Result] =
+      tasks match {
+        case l @ CompletedTasks(_, _, _, _)             =>
+          val taskList = generateTaskList(l, isLiableForTax)
+          Future.successful(
+            Ok(
+              view(
+                estateName = estateName,
+                sections = taskList.mandatory,
+                isTaskListComplete = taskList.isAbleToDeclare,
+                affinityGroup = request.affinityGroup
+              )
+            )
+          )
+        case CompletedTasksResponse.InternalServerError =>
+          logger.error(s"[TaskListController] unable to get tasks statuses")
+          errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
       }
 
-      for {
-        _ <- repository.set(continueOrCreateNewSession)
-        estateName <- getEstateName
-        isLiableForTax <- getIsLiableForTax
-        tasks <- storeConnector.getStatusOfTasks
-        result <- taskList(estateName, isLiableForTax, tasks)
-      } yield result
+    for {
+      _              <- repository.set(continueOrCreateNewSession)
+      estateName     <- getEstateName
+      isLiableForTax <- getIsLiableForTax
+      tasks          <- storeConnector.getStatusOfTasks
+      result         <- taskList(estateName, isLiableForTax, tasks)
+    } yield result
   }
-
 
   def onSubmit: Action[AnyContent] = Action {
     Redirect(controllers.routes.DeclarationController.onPageLoad())
   }
+
 }

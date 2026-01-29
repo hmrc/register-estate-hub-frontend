@@ -22,32 +22,29 @@ import models.entities.EntitiesType
 import models.identification.{Address, Name}
 import play.api.libs.json.{Json, _}
 
-case class EstateRegistration(matchData: Option[MatchData],
-                              correspondence: Correspondence,
-                              yearsReturns: Option[YearsReturns],
-                              declaration: Declaration,
-                              estate: Estate,
-                              agentDetails: Option[AgentDetails] = None)
+case class EstateRegistration(
+  matchData: Option[MatchData],
+  correspondence: Correspondence,
+  yearsReturns: Option[YearsReturns],
+  declaration: Declaration,
+  estate: Estate,
+  agentDetails: Option[AgentDetails] = None
+)
 
 object EstateRegistration {
-  implicit val estateRegistrationFormat : Format[EstateRegistration] = Json.format[EstateRegistration]
+  implicit val estateRegistrationFormat: Format[EstateRegistration] = Json.format[EstateRegistration]
 }
 
-case class MatchData(utr: String,
-                     name: String,
-                     postCode: Option[String])
+case class MatchData(utr: String, name: String, postCode: Option[String])
 
 object MatchData {
   implicit val matchDataFormat: Format[MatchData] = Json.format[MatchData]
 }
 
-case class Correspondence(abroadIndicator: Boolean,
-                          name: String,
-                          address: Address,
-                          phoneNumber: String)
+case class Correspondence(abroadIndicator: Boolean, name: String, address: Address, phoneNumber: String)
 
 object Correspondence {
-  implicit val correspondenceFormat : Format[Correspondence] = Json.format[Correspondence]
+  implicit val correspondenceFormat: Format[Correspondence] = Json.format[Correspondence]
 }
 
 case class YearsReturns(returns: List[YearReturnType])
@@ -56,8 +53,7 @@ object YearsReturns {
   implicit val yearsReturnsFormat: Format[YearsReturns] = Json.format[YearsReturns]
 }
 
-case class YearReturnType(taxReturnYear: String,
-                          taxConsequence: Boolean)
+case class YearReturnType(taxReturnYear: String, taxConsequence: Boolean)
 
 object YearReturnType {
   implicit val yearReturnTypeFormat: Format[YearReturnType] = Json.format[YearReturnType]
@@ -69,19 +65,19 @@ object Declaration {
   implicit lazy val formats: Format[Declaration] = Json.format[Declaration]
 }
 
-case class Estate(entities: EntitiesType,
-                  administrationEndDate: Option[LocalDate],
-                  periodTaxDues: String)
+case class Estate(entities: EntitiesType, administrationEndDate: Option[LocalDate], periodTaxDues: String)
 
 object Estate {
   implicit val estateFormat: Format[Estate] = Json.format[Estate]
 }
 
-case class AgentDetails(arn: String,
-                        agentName: String,
-                        agentAddress: Address,
-                        agentTelephoneNumber: String,
-                        clientReference: String)
+case class AgentDetails(
+  arn: String,
+  agentName: String,
+  agentAddress: Address,
+  agentTelephoneNumber: String,
+  clientReference: String
+)
 
 object AgentDetails {
   implicit val agentDetailsFormat: Format[AgentDetails] = Json.format[AgentDetails]

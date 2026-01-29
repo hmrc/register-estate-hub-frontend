@@ -32,27 +32,25 @@ import views.html.DeclaredAnswersView
 
 import scala.concurrent.ExecutionContext
 
-class DeclaredAnswersController @Inject()(
-                                           override val messagesApi: MessagesApi,
-                                           actions: Actions,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           declaredAnswersView: DeclaredAnswersView,
-                                           printHelper: RegistrationAnswersPrintHelper,
-                                           dateFormatter: DateFormatter,
-                                           connector: EstatesConnector
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class DeclaredAnswersController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  declaredAnswersView: DeclaredAnswersView,
+  printHelper: RegistrationAnswersPrintHelper,
+  dateFormatter: DateFormatter,
+  connector: EstatesConnector
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData.async {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.authWithData.async { implicit request =>
+    connector.getRegistration() map { registration =>
+      val entities = printHelper(registration)
 
-      connector.getRegistration() map { registration =>
+      val trn = request.userAnswers.get(TRNPage).getOrElse("")
 
-        val entities = printHelper(registration)
-
-        val trn = request.userAnswers.get(TRNPage).getOrElse("")
-
-        Ok(declaredAnswersView(entities, trn, declarationSent))
-      }
+      Ok(declaredAnswersView(entities, trn, declarationSent))
+    }
   }
 
   private def declarationSent(implicit request: DataRequest[AnyContent]): String = {

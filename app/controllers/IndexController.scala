@@ -30,36 +30,34 @@ import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IndexController @Inject()(
-                                 val controllerComponents: MessagesControllerComponents,
-                                 actions: Actions,
-                                 repository: SessionRepository
-                               )(implicit ec: ExecutionContext
-) extends FrontendBaseController with I18nSupport with Logging {
+class IndexController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
+  repository: SessionRepository
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad: Action[AnyContent] = actions.authWithSession.async {
-    implicit request =>
-      request.affinityGroup match {
-        case AffinityGroup.Agent =>
-          logger.info(s"[Session ID: ${Session.id(hc)}] user is an agent, redirect to overview")
-          val route: Call = controllers.routes.AgentOverviewController.onPageLoad()
-          checkUserAnswersAndRedirect(request, route)
-        case _ =>
-          val route: Call = controllers.routes.EstateRegisteredOnlineYesNoController.onPageLoad()
-          checkUserAnswersAndRedirect(request, route)
-      }
+  def onPageLoad: Action[AnyContent] = actions.authWithSession.async { implicit request =>
+    request.affinityGroup match {
+      case AffinityGroup.Agent =>
+        logger.info(s"[Session ID: ${Session.id(hc)}] user is an agent, redirect to overview")
+        val route: Call = controllers.routes.AgentOverviewController.onPageLoad()
+        checkUserAnswersAndRedirect(request, route)
+      case _                   =>
+        val route: Call = controllers.routes.EstateRegisteredOnlineYesNoController.onPageLoad()
+        checkUserAnswersAndRedirect(request, route)
+    }
   }
 
-  private def checkUserAnswersAndRedirect(request: OptionalDataRequest[AnyContent], route: Call) = {
+  private def checkUserAnswersAndRedirect(request: OptionalDataRequest[AnyContent], route: Call) =
     request.userAnswers match {
       case Some(_) =>
         Future.successful(Redirect(route))
-      case None =>
+      case None    =>
         val userAnswers: UserAnswers = UserAnswers(request.internalId)
         repository.set(userAnswers).map { _ =>
           Redirect(route)
         }
     }
-  }
 
 }

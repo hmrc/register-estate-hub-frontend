@@ -28,9 +28,9 @@ class YearFormatterSpec extends SpecBase {
     "current year is 2019" must {
 
       val mockLocalDateService = mock[LocalDateService]
-      val date = LocalDate.parse("2019-02-03")
+      val date                 = LocalDate.parse("2019-02-03")
       when(mockLocalDateService.now).thenReturn(date)
-      val formatter = new YearFormatter(mockLocalDateService)
+      val formatter            = new YearFormatter(mockLocalDateService)
       import formatter._
 
       "format 16 as 2016" in {
@@ -57,9 +57,9 @@ class YearFormatterSpec extends SpecBase {
     "current year is 2119" must {
 
       val mockLocalDateService = mock[LocalDateService]
-      val date = LocalDate.parse("2119-02-03")
+      val date                 = LocalDate.parse("2119-02-03")
       when(mockLocalDateService.now).thenReturn(date)
-      val formatter = new YearFormatter(mockLocalDateService)
+      val formatter            = new YearFormatter(mockLocalDateService)
       import formatter._
 
       "format 16 as 2116" in {
@@ -86,9 +86,9 @@ class YearFormatterSpec extends SpecBase {
     "current year is 2101" must {
 
       val mockLocalDateService = mock[LocalDateService]
-      val date = LocalDate.parse("2101-02-03")
+      val date                 = LocalDate.parse("2101-02-03")
       when(mockLocalDateService.now).thenReturn(date)
-      val formatter = new YearFormatter(mockLocalDateService)
+      val formatter            = new YearFormatter(mockLocalDateService)
       import formatter._
 
       "format 98 as 2098" in {
@@ -112,4 +112,5 @@ class YearFormatterSpec extends SpecBase {
       }
     }
   }
+
 }

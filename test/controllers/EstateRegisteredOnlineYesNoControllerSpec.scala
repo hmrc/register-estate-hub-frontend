@@ -30,7 +30,7 @@ import views.html.EstateRegisteredOnlineYesNoView
 class EstateRegisteredOnlineYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("estateRegisteredOnlineYesNo")
+  val form         = formProvider.withPrefix("estateRegisteredOnlineYesNo")
 
   lazy val estateRegisteredOnlineRoute = routes.EstateRegisteredOnlineYesNoController.onPageLoad().url
 
@@ -80,12 +80,14 @@ class EstateRegisteredOnlineYesNoControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(Seq(
-            bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
-            bind[SessionRepository].toInstance(sessionRepository)
-          ))
+          .overrides(
+            Seq(
+              bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
+              bind[SessionRepository].toInstance(sessionRepository)
+            )
+          )
           .build()
-      val request =
+      val request     =
         FakeRequest(POST, estateRegisteredOnlineRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
@@ -152,6 +154,6 @@ class EstateRegisteredOnlineYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
-
   }
+
 }

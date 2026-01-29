@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 trait Mocked extends MockitoSugar {
 
-  val sessionRepository: SessionRepository = mock[SessionRepository]
+  val sessionRepository: SessionRepository                  = mock[SessionRepository]
   val userAnswerArgumentCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
   when(sessionRepository.set(any())).thenReturn(Future.successful(true))

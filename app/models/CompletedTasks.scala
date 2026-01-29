@@ -25,36 +25,41 @@ import utils.Session
 sealed trait CompletedTasksResponse
 
 case class CompletedTasks(
-                           details: Boolean,
-                           personalRepresentative: Boolean,
-                           deceased: Boolean,
-                           yearsOfTaxLiability: Boolean
-                         ) extends CompletedTasksResponse
+  details: Boolean,
+  personalRepresentative: Boolean,
+  deceased: Boolean,
+  yearsOfTaxLiability: Boolean
+) extends CompletedTasksResponse
 
 object CompletedTasks {
 
   implicit val formats: Format[CompletedTasks] = Json.format[CompletedTasks]
 
-  def apply() : CompletedTasks = CompletedTasks(
+  def apply(): CompletedTasks = CompletedTasks(
     details = false,
     personalRepresentative = false,
     deceased = false,
     yearsOfTaxLiability = false
   )
+
 }
 
 object CompletedTasksResponse extends Logging {
 
   case object InternalServerError extends CompletedTasksResponse
 
-  implicit def httpReads(implicit hc: HeaderCarrier): HttpReads[CompletedTasksResponse] = (method: String, url: String, response: HttpResponse) => {
-    logger.info(s"[Session ID: ${Session.id(hc)}] response status received from estates store api: ${response.status}")
+  implicit def httpReads(implicit hc: HeaderCarrier): HttpReads[CompletedTasksResponse] =
+    (method: String, url: String, response: HttpResponse) => {
+      logger.info(
+        s"[Session ID: ${Session.id(hc)}] response status received from estates store api: ${response.status}"
+      )
 
-    response.status match {
-      case OK =>
-        response.json.as[CompletedTasks]
-      case _ =>
-        InternalServerError
+      response.status match {
+        case OK =>
+          response.json.as[CompletedTasks]
+        case _  =>
+          InternalServerError
+      }
     }
-  }
+
 }

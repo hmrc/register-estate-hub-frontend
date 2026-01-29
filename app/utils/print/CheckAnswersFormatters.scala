@@ -26,29 +26,25 @@ import utils.countryOptions.CountryOptions
 import java.time.LocalDate
 import javax.inject.Inject
 
-class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
-                                       countryOptions: CountryOptions) {
+class CheckAnswersFormatters @Inject() (languageUtils: LanguageUtils, countryOptions: CountryOptions) {
 
-  def formatDate(date: LocalDate)(implicit messages: Messages): Html = {
+  def formatDate(date: LocalDate)(implicit messages: Messages): Html =
     HtmlFormat.escape(languageUtils.Dates.formatDate(date))
-  }
 
-  def yesOrNo(answer: Boolean)(implicit messages: Messages): Html = {
+  def yesOrNo(answer: Boolean)(implicit messages: Messages): Html =
     if (answer) {
       HtmlFormat.escape(messages("site.yes"))
     } else {
       HtmlFormat.escape(messages("site.no"))
     }
-  }
 
   def formatNino(nino: String): Html = HtmlFormat.escape(Nino(nino).formatted)
 
-  def formatAddress(address: Address)(implicit messages: Messages): Html = {
+  def formatAddress(address: Address)(implicit messages: Messages): Html =
     address match {
-      case a: UkAddress => formatUkAddress(a)
+      case a: UkAddress    => formatUkAddress(a)
       case a: NonUkAddress => formatNonUkAddress(a)
     }
-  }
 
   private def formatUkAddress(address: UkAddress): Html = {
     val lines =
@@ -100,8 +96,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils,
     breakLines(lines)
   }
 
-  private def breakLines(lines: Seq[Html]): Html = {
+  private def breakLines(lines: Seq[Html]): Html =
     Html(lines.mkString("<br />"))
-  }
 
 }

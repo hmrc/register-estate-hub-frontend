@@ -58,4 +58,5 @@ class MustRegisterEstateControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

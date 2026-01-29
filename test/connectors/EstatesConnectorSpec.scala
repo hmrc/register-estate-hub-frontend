@@ -34,7 +34,8 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 
-class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
+class EstatesConnectorSpec
+    extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -66,7 +67,10 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
     ),
     yearsReturns = None,
     estate = Estate(
-      entities = EntitiesType(PersonalRepresentativeType(), DeceasedPerson(Name("first", None, "last"), None, LocalDate.parse("1996-02-03"), None, None, None)),
+      entities = EntitiesType(
+        PersonalRepresentativeType(),
+        DeceasedPerson(Name("first", None, "last"), None, LocalDate.parse("1996-02-03"), None, None, None)
+      ),
       administrationEndDate = None,
       periodTaxDues = "periodTaxDues"
     ),
@@ -81,14 +85,14 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
         .configure(
           Seq(
             "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                   -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val json = Json.parse(
-        """
+      val json = Json.parse("""
           |{
           |  "trn": "XTRN1234567"
           |}
@@ -113,14 +117,14 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
         .configure(
           Seq(
             "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                   -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val json = Json.parse(
-        """
+      val json = Json.parse("""
           |{
           | "code": "ALREADY_REGISTERED",
           | "message": "Estate already registered."
@@ -129,9 +133,10 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
 
       server.stubFor(
         post(urlEqualTo("/estates/register"))
-          .willReturn(aResponse()
-            .withStatus(Status.CONFLICT)
-            .withBody(json.toString())
+          .willReturn(
+            aResponse()
+              .withStatus(Status.CONFLICT)
+              .withBody(json.toString())
           )
       )
 
@@ -149,14 +154,14 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
         .configure(
           Seq(
             "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                   -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val json = Json.parse(
-        """
+      val json = Json.parse("""
           |{
           | "code": "INTERNAL_SERVER_ERROR",
           | "message": "Internal server error."
@@ -165,9 +170,10 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
 
       server.stubFor(
         post(urlEqualTo("/estates/register"))
-          .willReturn(aResponse()
-            .withStatus(Status.INTERNAL_SERVER_ERROR)
-            .withBody(json.toString())
+          .willReturn(
+            aResponse()
+              .withStatus(Status.INTERNAL_SERVER_ERROR)
+              .withBody(json.toString())
           )
       )
 
@@ -184,14 +190,14 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
         .configure(
           Seq(
             "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                   -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val personalRepIndResponse = Json.parse(
-        """
+      val personalRepIndResponse = Json.parse("""
           |{
           |  "name": {
           |     "firstName": "Adam",
@@ -205,8 +211,7 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
           |}
           |""".stripMargin)
 
-      val personalRepOrgResponse = Json.parse(
-        """
+      val personalRepOrgResponse = Json.parse("""
           |{}
           |""".stripMargin)
 
@@ -232,19 +237,18 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
         .configure(
           Seq(
             "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                   -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val personalRepIndResponse = Json.parse(
-        """
+      val personalRepIndResponse = Json.parse("""
           |{}
           |""".stripMargin)
 
-      val personalRepOrgResponse = Json.parse(
-        """
+      val personalRepOrgResponse = Json.parse("""
           |{
           | "orgName": "Conder Ltd",
           | "phoneNumber": "+44 1911111",
@@ -276,19 +280,18 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
         .configure(
           Seq(
             "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                   -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val personalRepIndResponse = Json.parse(
-        """
+      val personalRepIndResponse = Json.parse("""
           |{}
           |""".stripMargin)
 
-      val personalRepOrgResponse = Json.parse(
-        """
+      val personalRepOrgResponse = Json.parse("""
           |{}
           |""".stripMargin)
 
@@ -319,14 +322,14 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
           .configure(
             Seq(
               "microservice.services.estates.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                   -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[EstatesConnector]
 
-        val json = Json.parse(
-          """
+        val json = Json.parse("""
             |{
             | "correspondence": {
             |   "name": "name"
@@ -368,22 +371,23 @@ class EstatesConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAn
         .configure(
           Seq(
             "microservice.services.estates.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                   -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesConnector]
 
-      val json = Json.parse(
-        """
+      val json = Json.parse("""
           |true
           |""".stripMargin)
 
       server.stubFor(
         get(urlEqualTo("/estates/is-tax-required"))
-          .willReturn(aResponse()
-            .withStatus(Status.OK)
-            .withBody(json.toString())
+          .willReturn(
+            aResponse()
+              .withStatus(Status.OK)
+              .withBody(json.toString())
           )
       )
 

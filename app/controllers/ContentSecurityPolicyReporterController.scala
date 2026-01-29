@@ -25,17 +25,19 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class ContentSecurityPolicyReporterController @Inject()(
-                                 val controllerComponents: MessagesControllerComponents
-                               ) extends FrontendBaseController with I18nSupport with Logging {
+class ContentSecurityPolicyReporterController @Inject() (
+  val controllerComponents: MessagesControllerComponents
+) extends FrontendBaseController with I18nSupport with Logging {
 
   case class CSPViolation(`csp-report`: Violation)
 
-  case class Violation(`document-uri`: String,
-                       referrer: String,
-                       `blocked-uri`: String,
-                       `violated-directive`: String,
-                       `original-policy`: String)
+  case class Violation(
+    `document-uri`: String,
+    referrer: String,
+    `blocked-uri`: String,
+    `violated-directive`: String,
+    `original-policy`: String
+  )
 
   object CSPViolation {
     implicit val formats: OFormat[CSPViolation] = Json.format[CSPViolation]
@@ -45,13 +47,11 @@ class ContentSecurityPolicyReporterController @Inject()(
     implicit val formats: OFormat[Violation] = Json.format[Violation]
   }
 
-  def report: Action[JsValue] = Action.async(parse.tolerantJson) {
-    implicit request =>
-      withJsonBody[CSPViolation] {
-        violation =>
-          logger.warn(s"[Estates CSP Violation] ${Json.stringify(Json.toJson(violation))}")
-          Future.successful(Ok)
-      }
+  def report: Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
+    withJsonBody[CSPViolation] { violation =>
+      logger.warn(s"[Estates CSP Violation] ${Json.stringify(Json.toJson(violation))}")
+      Future.successful(Ok)
+    }
   }
 
 }

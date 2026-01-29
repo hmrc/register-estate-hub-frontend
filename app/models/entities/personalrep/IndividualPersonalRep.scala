@@ -23,12 +23,14 @@ import models.identification.{Address, IndividualIdentification, Name}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class IndividualPersonalRep(name: Name,
-                                 dateOfBirth: LocalDate,
-                                 identification: IndividualIdentification,
-                                 address: Address,
-                                 email: Option[String],
-                                 phoneNumber: String)
+case class IndividualPersonalRep(
+  name: Name,
+  dateOfBirth: LocalDate,
+  identification: IndividualIdentification,
+  address: Address,
+  email: Option[String],
+  phoneNumber: String
+)
 
 object IndividualPersonalRep extends Entity {
 
@@ -38,7 +40,7 @@ object IndividualPersonalRep extends Entity {
       __.lazyRead(readAtSubPath[IndividualIdentification](__ \ Symbol("identification"))) and
       __.lazyRead(readAtSubPath[Address](__ \ Symbol("identification") \ Symbol("address"))) and
       (__ \ Symbol("email")).readNullable[String] and
-      (__ \ Symbol("phoneNumber")).read[String]).tupled.map{
+      (__ \ Symbol("phoneNumber")).read[String]).tupled.map {
 
       case (name, dob, identification, address, email, phoneNumber) =>
         personalrep.IndividualPersonalRep(name, dob, identification, address, email, phoneNumber)
@@ -50,7 +52,6 @@ object IndividualPersonalRep extends Entity {
       (__ \ Symbol("identification")).write[IndividualIdentification] and
       (__ \ Symbol("identification") \ Symbol("address")).write[Address] and
       (__ \ Symbol("email")).writeNullable[String] and
-      (__ \ "phoneNumber").write[String]
-      ).apply(unlift(IndividualPersonalRep.unapply))
+      (__ \ "phoneNumber").write[String]).apply(unlift(IndividualPersonalRep.unapply))
 
 }

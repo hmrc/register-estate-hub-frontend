@@ -24,8 +24,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class EstatesStoreConnector @Inject()(http: HttpClientV2, config : FrontendAppConfig) {
-
+class EstatesStoreConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) {
 
   def getStatusOfTasks(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CompletedTasksResponse] = {
     val registerTasksUrl = s"${config.estatesStoreUrl}/register/tasks"

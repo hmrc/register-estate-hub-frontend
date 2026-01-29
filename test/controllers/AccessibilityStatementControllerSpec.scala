@@ -43,4 +43,5 @@ class AccessibilityStatementControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

@@ -23,32 +23,31 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class IndividualPersonalRepPrintHelper @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
+class IndividualPersonalRepPrintHelper @Inject() (checkAnswersFormatters: CheckAnswersFormatters) {
 
   def apply(individual: IndividualPersonalRep)(implicit messages: Messages): AnswerSection = {
     val converter = AnswerRowConverter(individual.name.displayName)(checkAnswersFormatters)
 
-    def identification(identification: IndividualIdentification): Seq[AnswerRow] = {
+    def identification(identification: IndividualIdentification): Seq[AnswerRow] =
       identification match {
         case NationalInsuranceNumber(nino) =>
           Seq(
             converter.yesNoQuestion(boolean = true, "personalRep.individual.ninoYesNo"),
             converter.ninoQuestion(nino, "personalRep.individual.nino")
           )
-        case passport: Passport =>
+        case passport: Passport            =>
           Seq(
             converter.yesNoQuestion(boolean = false, "personalRep.individual.ninoYesNo"),
             converter.stringQuestion(messages("passportOrIdCard.passport"), "personalRep.individual.passportOrIdCard"),
             converter.passportQuestion(passport, "personalRep.individual.passport")
           )
-        case idCard: IdCard =>
+        case idCard: IdCard                =>
           Seq(
             converter.yesNoQuestion(boolean = false, "personalRep.individual.ninoYesNo"),
             converter.stringQuestion(messages("passportOrIdCard.idCard"), "personalRep.individual.passportOrIdCard"),
             converter.idCardQuestion(idCard, "personalRep.individual.idCard")
           )
       }
-    }
 
     def address(address: Address): Seq[AnswerRow] = {
       def answerRow(isUk: Boolean, address: Address): Seq[AnswerRow] = Seq(
@@ -57,19 +56,18 @@ class IndividualPersonalRepPrintHelper @Inject()(checkAnswersFormatters: CheckAn
       )
 
       address match {
-        case address: UkAddress =>
+        case address: UkAddress    =>
           answerRow(isUk = true, address)
         case address: NonUkAddress =>
           answerRow(isUk = false, address)
       }
     }
 
-    def email(email: Option[String]): Seq[AnswerRow] = {
+    def email(email: Option[String]): Seq[AnswerRow] =
       Seq(
         Some(converter.yesNoQuestion(boolean = email.isDefined, "personalRep.individual.emailYesNo")),
         converter.optionStringQuestion(email, "personalRep.individual.email")
       ).flatten
-    }
 
     val rows: Seq[AnswerRow] =
       Seq(
@@ -84,4 +82,5 @@ class IndividualPersonalRepPrintHelper @Inject()(checkAnswersFormatters: CheckAn
 
     AnswerSection(Some("taskList.personalRepresentative.label"), rows)
   }
+
 }

@@ -64,4 +64,5 @@ class HaveUTRYesNoViewSpec extends YesNoViewBehaviours {
     }
 
   }
+
 }

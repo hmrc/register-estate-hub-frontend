@@ -47,7 +47,9 @@ class DeclarationViewSpec extends QuestionViewBehaviours[Declaration] {
       messageKeyPrefix,
       None,
       controllers.routes.ConfirmationController.onPageLoad().url,
-      "firstName", "middleName", "lastName"
+      "firstName",
+      "middleName",
+      "lastName"
     )
   }
 
@@ -58,7 +60,10 @@ class DeclarationViewSpec extends QuestionViewBehaviours[Declaration] {
       view.apply(form, AffinityGroup.Organisation)(fakeRequest, messages)
 
     val doc = asDocument(applyView(form))
-    assertContainsText(doc, "I confirm that the information I have given is true and complete to the best of my knowledge. I will make sure it is kept up to date, including any change of address. If I find out that I have made an error or something has changed, I will update the information.")
+    assertContainsText(
+      doc,
+      "I confirm that the information I have given is true and complete to the best of my knowledge. I will make sure it is kept up to date, including any change of address. If I find out that I have made an error or something has changed, I will update the information."
+    )
   }
 
   "render declaration warning for an Agent" in {
@@ -68,7 +73,10 @@ class DeclarationViewSpec extends QuestionViewBehaviours[Declaration] {
       view.apply(form, AffinityGroup.Agent)(fakeRequest, messages)
 
     val doc = asDocument(applyView(form))
-    assertContainsText(doc, "I confirm that the information my client has given is true and complete to the best of their knowledge. I will make sure it is kept up to date, including any change of address. If I find out that an error has been made or something has changed, I will update the information.")
+    assertContainsText(
+      doc,
+      "I confirm that the information my client has given is true and complete to the best of their knowledge. I will make sure it is kept up to date, including any change of address. If I find out that an error has been made or something has changed, I will update the information."
+    )
   }
 
 }

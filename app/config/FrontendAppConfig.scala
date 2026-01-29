@@ -24,32 +24,31 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import java.net.{URI, URLEncoder}
 
-
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
-  final val ENGLISH = "en"
-  final val WELSH = "cy"
+  final val ENGLISH         = "en"
+  final val WELSH           = "cy"
   final val UK_COUNTRY_CODE = "GB"
 
-  lazy val loginUrl: String = configuration.get[String]("urls.login")
+  lazy val loginUrl: String         = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  lazy val logoutUrl: String = configuration.get[String]("urls.logout")
+  lazy val logoutUrl: String        = configuration.get[String]("urls.logout")
 
   lazy val logoutAudit: Boolean =
     configuration.get[Boolean]("microservice.services.features.auditing.logout")
 
   lazy val countdownLength: Int = configuration.get[Int]("timeout.countdown")
-  lazy val timeoutLength: Int = configuration.get[Int]("timeout.length")
+  lazy val timeoutLength: Int   = configuration.get[Int]("timeout.length")
 
-  private lazy val agentsSubscriptionsUrl : String = configuration.get[String]("urls.agentSubscriptions")
-  lazy val agentServiceRegistrationUrl = s"$agentsSubscriptionsUrl?continue=$loginContinueUrl"
-  lazy val registerYourClientsEstateUrl: String = configuration.get[String]("urls.registerYourClientsEstate")
+  private lazy val agentsSubscriptionsUrl: String = configuration.get[String]("urls.agentSubscriptions")
+  lazy val agentServiceRegistrationUrl            = s"$agentsSubscriptionsUrl?continue=$loginContinueUrl"
+  lazy val registerYourClientsEstateUrl: String   = configuration.get[String]("urls.registerYourClientsEstate")
 
-  lazy val estatesUrl: String = servicesConfig.baseUrl("estates")
+  lazy val estatesUrl: String      = servicesConfig.baseUrl("estates")
   lazy val estatesStoreUrl: String = servicesConfig.baseUrl("estates-store") + "/estates-store"
 
-  lazy val locationCanonicalList: String = configuration.get[String]("location.canonical.list.all")
+  lazy val locationCanonicalList: String   = configuration.get[String]("location.canonical.list.all")
   lazy val locationCanonicalListCY: String = configuration.get[String]("location.canonical.list.allCY")
 
   lazy val languageTranslationEnabled: Boolean =
@@ -61,14 +60,23 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   )
 
   val cacheTtlSeconds: Long = configuration.get[Long]("mongodb.timeToLiveInSeconds")
-  val dropIndexes: Boolean = configuration.getOptional[Boolean]("microservice.services.features.mongo.dropIndexes").getOrElse(false)
 
-  lazy val estateDetailsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.estate-details.enabled")
-  lazy val personalRepEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.personal-rep.enabled")
-  lazy val deceasedPersonsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.deceased-persons.enabled")
-  lazy val registerTaxEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.register-tax.enabled")
+  val dropIndexes: Boolean  =
+    configuration.getOptional[Boolean]("microservice.services.features.mongo.dropIndexes").getOrElse(false)
 
-  lazy val maintainAnEstateFrontendUrl : String =
+  lazy val estateDetailsEnabled: Boolean   =
+    configuration.get[Boolean]("microservice.services.features.estate-details.enabled")
+
+  lazy val personalRepEnabled: Boolean     =
+    configuration.get[Boolean]("microservice.services.features.personal-rep.enabled")
+
+  lazy val deceasedPersonsEnabled: Boolean =
+    configuration.get[Boolean]("microservice.services.features.deceased-persons.enabled")
+
+  lazy val registerTaxEnabled: Boolean     =
+    configuration.get[Boolean]("microservice.services.features.register-tax.enabled")
+
+  lazy val maintainAnEstateFrontendUrl: String =
     configuration.get[String]("urls.maintainAnEstate")
 
   lazy val estateDetailsFrontendUrl: String =
@@ -97,7 +105,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   lazy val ttlInSeconds: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  private lazy val accessibilityLinkBaseUrl = configuration.get[String]("urls.accessibility")
+  private lazy val accessibilityLinkBaseUrl                      = configuration.get[String]("urls.accessibility")
+
   def accessibilityLinkUrl(implicit request: Request[_]): String = {
     val userAction = URLEncoder.encode(new URI(request.uri).getPath, "UTF-8")
     s"$accessibilityLinkBaseUrl?userAction=$userAction"
@@ -106,7 +115,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def helplineUrl(implicit messages: Messages): String = {
     val path = messages.lang.code match {
       case WELSH => "urls.welshHelpline"
-      case _ => "urls.estatesHelpline"
+      case _     => "urls.estatesHelpline"
     }
 
     configuration.get[String](path)

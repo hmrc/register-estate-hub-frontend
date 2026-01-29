@@ -27,20 +27,20 @@ import views.html.DraftAnswersView
 
 import scala.concurrent.ExecutionContext
 
-class DraftAnswersController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        actions: Actions,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: DraftAnswersView,
-                                        printHelper: RegistrationAnswersPrintHelper,
-                                        connector: EstatesConnector
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class DraftAnswersController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: DraftAnswersView,
+  printHelper: RegistrationAnswersPrintHelper,
+  connector: EstatesConnector
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData.async {
-    implicit request =>
-
-      connector.getRegistration() map { registration =>
-        Ok(view(printHelper(registration)))
-      }
+  def onPageLoad(): Action[AnyContent] = actions.authWithData.async { implicit request =>
+    connector.getRegistration() map { registration =>
+      Ok(view(printHelper(registration)))
+    }
   }
+
 }

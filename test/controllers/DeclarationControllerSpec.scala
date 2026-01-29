@@ -37,7 +37,7 @@ import scala.concurrent.Future
 
 class DeclarationControllerSpec extends SpecBase {
 
-  private val formProvider = new DeclarationFormProvider()
+  private val formProvider            = new DeclarationFormProvider()
   private val form: Form[Declaration] = formProvider()
 
   lazy val declarationRoute: String = routes.DeclarationController.onPageLoad().url
@@ -85,7 +85,9 @@ class DeclarationControllerSpec extends SpecBase {
       val declaration: Declaration = Declaration(Name("First", None, "Last"))
 
       val userAnswers = emptyUserAnswers
-        .set(DeclarationPage, declaration).success.value
+        .set(DeclarationPage, declaration)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -108,10 +110,12 @@ class DeclarationControllerSpec extends SpecBase {
       val mockConnector: EstatesConnector = mock[EstatesConnector]
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(Seq(
-          bind[EstatesConnector].to(mockConnector),
-          bind[SessionRepository].toInstance(sessionRepository)
-        ))
+        .overrides(
+          Seq(
+            bind[EstatesConnector].to(mockConnector),
+            bind[SessionRepository].toInstance(sessionRepository)
+          )
+        )
         .build()
 
       when(mockConnector.register(any())(any(), any())).thenReturn(Future.successful(TRNResponse("fakeTrn")))
@@ -183,4 +187,5 @@ class DeclarationControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

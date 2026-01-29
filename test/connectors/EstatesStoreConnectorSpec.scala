@@ -28,7 +28,8 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 
-class EstatesStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
+class EstatesStoreConnectorSpec
+    extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -56,14 +57,14 @@ class EstatesStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Bef
         .configure(
           Seq(
             "microservice.services.estates-store.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                         -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesStoreConnector]
 
-      val json = Json.parse(
-        """
+      val json = Json.parse("""
           |{
           |  "details": true,
           |  "personalRepresentative": true,
@@ -90,14 +91,14 @@ class EstatesStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Bef
         .configure(
           Seq(
             "microservice.services.estates-store.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                         -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[EstatesStoreConnector]
 
-      val json = Json.parse(
-        """
+      val json = Json.parse("""
           |{
           | "code": "INTERNAL_SERVER_ERROR",
           | "message": "Internal server error."
@@ -106,9 +107,10 @@ class EstatesStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Bef
 
       server.stubFor(
         get(urlEqualTo("/estates-store/register/tasks"))
-          .willReturn(aResponse()
-            .withStatus(Status.INTERNAL_SERVER_ERROR)
-            .withBody(json.toString())
+          .willReturn(
+            aResponse()
+              .withStatus(Status.INTERNAL_SERVER_ERROR)
+              .withBody(json.toString())
           )
       )
 

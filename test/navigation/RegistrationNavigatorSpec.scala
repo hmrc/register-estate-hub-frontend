@@ -28,17 +28,21 @@ class RegistrationNavigatorSpec extends SpecBase {
 
   "Registration navigator" when {
 
-    "EstateRegisteredOnlineYesNo page -> HaveUTRYesNo page" in {
-      navigator.nextPage(EstateRegisteredOnlineYesNoPage, emptyUserAnswers)
+    "EstateRegisteredOnlineYesNo page -> HaveUTRYesNo page" in
+      navigator
+        .nextPage(EstateRegisteredOnlineYesNoPage, emptyUserAnswers)
         .mustBe(controllers.routes.HaveUTRYesNoController.onPageLoad())
-    }
 
     "registered online" must {
 
       "HaveUTRYesNo page -> Yes with Registered online Yes -> Maintain an estate service" in {
         val answers = emptyUserAnswers
-          .set(EstateRegisteredOnlineYesNoPage, true).success.value
-          .set(HaveUTRYesNoPage, true).success.value
+          .set(EstateRegisteredOnlineYesNoPage, true)
+          .success
+          .value
+          .set(HaveUTRYesNoPage, true)
+          .success
+          .value
 
         navigator.nextPage(HaveUTRYesNoPage, answers).url mustBe appConfig.maintainAnEstateFrontendUrl
 
@@ -46,8 +50,12 @@ class RegistrationNavigatorSpec extends SpecBase {
 
       "HaveUTRYesNo page -> No with Registered online Yes -> UTR sent in post" in {
         val answers = emptyUserAnswers
-          .set(EstateRegisteredOnlineYesNoPage, true).success.value
-          .set(HaveUTRYesNoPage, false).success.value
+          .set(EstateRegisteredOnlineYesNoPage, true)
+          .success
+          .value
+          .set(HaveUTRYesNoPage, false)
+          .success
+          .value
 
         navigator.nextPage(HaveUTRYesNoPage, answers) mustBe controllers.routes.UTRSentInPostController.onPageLoad()
       }
@@ -58,21 +66,31 @@ class RegistrationNavigatorSpec extends SpecBase {
 
       "HaveUTRYesNo page -> Yes with Registered online No -> Must register online page" in {
         val answers = emptyUserAnswers
-          .set(EstateRegisteredOnlineYesNoPage, false).success.value
-          .set(HaveUTRYesNoPage, true).success.value
+          .set(EstateRegisteredOnlineYesNoPage, false)
+          .success
+          .value
+          .set(HaveUTRYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(HaveUTRYesNoPage, answers)
+        navigator
+          .nextPage(HaveUTRYesNoPage, answers)
           .mustBe(controllers.routes.MustRegisterEstateController.onPageLoad())
       }
 
       "HaveUTRYesNo page -> No with Registered online No -> Suitability questions" in {
         val answers = emptyUserAnswers
-          .set(EstateRegisteredOnlineYesNoPage, false).success.value
-          .set(HaveUTRYesNoPage, false).success.value
+          .set(EstateRegisteredOnlineYesNoPage, false)
+          .success
+          .value
+          .set(HaveUTRYesNoPage, false)
+          .success
+          .value
 
         navigator.nextPage(HaveUTRYesNoPage, answers).url mustBe appConfig.suitabilityUrl
       }
     }
 
   }
+
 }

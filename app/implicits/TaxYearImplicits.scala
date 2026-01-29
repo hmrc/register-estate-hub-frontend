@@ -23,12 +23,13 @@ import utils.DateFormatter
 import java.time.LocalDate
 import javax.inject.Inject
 
-class TaxYearImplicits @Inject()(dateFormatter: DateFormatter) {
+class TaxYearImplicits @Inject() (dateFormatter: DateFormatter) {
 
   implicit class TaxYearWithFormattedDates(taxYear: TaxYear)(implicit messages: Messages) {
     private def formatDate(date: LocalDate): String = dateFormatter.formatDate(date)(messages)
 
     val start: String = formatDate(taxYear.starts)
-    val end: String = formatDate(taxYear.finishes)
+    val end: String   = formatDate(taxYear.finishes)
   }
+
 }

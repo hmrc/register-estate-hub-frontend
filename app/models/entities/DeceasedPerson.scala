@@ -23,12 +23,14 @@ import models.entities
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-final case class DeceasedPerson(name: Name,
-                                dateOfBirth: Option[LocalDate],
-                                dateOfDeath: LocalDate,
-                                nino: Option[NationalInsuranceNumber],
-                                addressYesNo: Option[Boolean],
-                                address : Option[Address])
+final case class DeceasedPerson(
+  name: Name,
+  dateOfBirth: Option[LocalDate],
+  dateOfDeath: LocalDate,
+  nino: Option[NationalInsuranceNumber],
+  addressYesNo: Option[Boolean],
+  address: Option[Address]
+)
 
 object DeceasedPerson extends Entity {
 
@@ -38,7 +40,7 @@ object DeceasedPerson extends Entity {
       (__ \ Symbol("dateOfDeath")).read[LocalDate] and
       __.lazyRead(readNullableAtSubPath[NationalInsuranceNumber](__ \ Symbol("identification"))) and
       (__ \ Symbol("addressYesNo")).readNullable[Boolean] and
-      __.lazyRead(readNullableAtSubPath[Address](__ \ Symbol("identification") \ Symbol("address")))).tupled.map{
+      __.lazyRead(readNullableAtSubPath[Address](__ \ Symbol("identification") \ Symbol("address")))).tupled.map {
 
       case (name, dob, dod, nino, addressYesNo, identification) =>
         entities.DeceasedPerson(name, dob, dod, nino, addressYesNo, identification)
@@ -51,13 +53,15 @@ object DeceasedPerson extends Entity {
       (__ \ Symbol("dateOfDeath")).write[LocalDate] and
       (__ \ Symbol("identification")).writeNullable[NationalInsuranceNumber] and
       (__ \ Symbol("addressYesNo")).writeNullable[Boolean] and
-      (__ \ Symbol("identification") \ Symbol("address")).writeNullable[Address]
-      ).apply(settlor => (
-      settlor.name,
-      settlor.dateOfBirth,
-      settlor.dateOfDeath,
-      settlor.nino,
-      settlor.addressYesNo,
-      settlor.address
-    ))
+      (__ \ Symbol("identification") \ Symbol("address")).writeNullable[Address]).apply(settlor =>
+      (
+        settlor.name,
+        settlor.dateOfBirth,
+        settlor.dateOfDeath,
+        settlor.nino,
+        settlor.addressYesNo,
+        settlor.address
+      )
+    )
+
 }

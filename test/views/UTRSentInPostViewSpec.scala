@@ -27,11 +27,7 @@ class UTRSentInPostViewSpec extends ViewBehaviours {
 
     val applyView = view.apply()(fakeRequest, messages)
 
-    behave like normalPage(applyView,
-      "utrSentInPost",
-      "p1",
-      "link",
-      "link.remainder"
-    )
+    behave like normalPage(applyView, "utrSentInPost", "p1", "link", "link.remainder")
   }
+
 }

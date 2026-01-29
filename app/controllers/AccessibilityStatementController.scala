@@ -24,13 +24,14 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AccessibilityStatementView
 
-class AccessibilityStatementController @Inject()(
-                                                  override val messagesApi: MessagesApi,
-                                                  val controllerComponents: MessagesControllerComponents,
-                                                  view: AccessibilityStatementView
-                                                ) extends FrontendBaseController with I18nSupport {
+class AccessibilityStatementController @Inject() (
+  override val messagesApi: MessagesApi,
+  val controllerComponents: MessagesControllerComponents,
+  view: AccessibilityStatementView
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(userAction: String): Action[AnyContent] = Action {
-    implicit request => Ok(view(URLEncoder.encode(userAction, "UTF-8")))
+  def onPageLoad(userAction: String): Action[AnyContent] = Action { implicit request =>
+    Ok(view(URLEncoder.encode(userAction, "UTF-8")))
   }
+
 }

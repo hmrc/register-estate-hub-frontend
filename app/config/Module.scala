@@ -28,6 +28,10 @@ class Module extends AbstractModule {
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
 
-    bind(classOf[Navigator]).annotatedWith(classOf[EstateRegistration]).to(classOf[RegistrationNavigator]).asEagerSingleton()
+    bind(classOf[Navigator])
+      .annotatedWith(classOf[EstateRegistration])
+      .to(classOf[RegistrationNavigator])
+      .asEagerSingleton()
   }
+
 }
