@@ -48,7 +48,7 @@ class AffinityGroupIdentifierActionSpec extends SpecBase {
   ): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments] =
     Future.successful(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment))
 
-  private val agentEnrolment   = Enrolments(
+  private val agentEnrolment = Enrolments(
     Set(Enrolment("HMRC-AS-AGENT", List(EnrolmentIdentifier("AgentReferenceNumber", "SomeVal")), "Activated", None))
   )
 

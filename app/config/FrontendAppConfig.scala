@@ -61,19 +61,19 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val cacheTtlSeconds: Long = configuration.get[Long]("mongodb.timeToLiveInSeconds")
 
-  val dropIndexes: Boolean  =
+  val dropIndexes: Boolean =
     configuration.getOptional[Boolean]("microservice.services.features.mongo.dropIndexes").getOrElse(false)
 
-  lazy val estateDetailsEnabled: Boolean   =
+  lazy val estateDetailsEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.estate-details.enabled")
 
-  lazy val personalRepEnabled: Boolean     =
+  lazy val personalRepEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.personal-rep.enabled")
 
   lazy val deceasedPersonsEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.deceased-persons.enabled")
 
-  lazy val registerTaxEnabled: Boolean     =
+  lazy val registerTaxEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.register-tax.enabled")
 
   lazy val maintainAnEstateFrontendUrl: String =
@@ -105,7 +105,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   lazy val ttlInSeconds: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
-  private lazy val accessibilityLinkBaseUrl                      = configuration.get[String]("urls.accessibility")
+  private lazy val accessibilityLinkBaseUrl = configuration.get[String]("urls.accessibility")
 
   def accessibilityLinkUrl(implicit request: Request[_]): String = {
     val userAction = URLEncoder.encode(new URI(request.uri).getPath, "UTF-8")
