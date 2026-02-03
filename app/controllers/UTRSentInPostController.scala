@@ -23,12 +23,13 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.UTRSentInPostView
 
 @Singleton
-class UTRSentInPostController @Inject()(
-                                               val controllerComponents: MessagesControllerComponents,
-                                               view: UTRSentInPostView
-                                             ) extends FrontendBaseController with I18nSupport {
+class UTRSentInPostController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  view: UTRSentInPostView
+) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view())
   }
+
 }

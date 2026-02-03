@@ -30,16 +30,16 @@ class RegistrationAnswersPrintHelperSpec extends SpecBase {
 
   val helper: RegistrationAnswersPrintHelper = injector.instanceOf[RegistrationAnswersPrintHelper]
 
-  val estateName: String = "Estate of John Doe"
-  val name: Name = Name("John", None, "Doe")
-  val dateOfBirth: LocalDate = LocalDate.parse("2000-02-03")
-  val dateOfDeath: LocalDate = LocalDate.parse("2019-02-03")
+  val estateName: String            = "Estate of John Doe"
+  val name: Name                    = Name("John", None, "Doe")
+  val dateOfBirth: LocalDate        = LocalDate.parse("2000-02-03")
+  val dateOfDeath: LocalDate        = LocalDate.parse("2019-02-03")
   val nino: NationalInsuranceNumber = NationalInsuranceNumber("AA000000A")
-  val ukAddress: UkAddress = UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE")
-  val nonUkAddress: NonUkAddress = NonUkAddress("99 Test Lane", "Testville", None, "DE")
-  val passport: Passport = Passport("GB", "1234567890", LocalDate.parse("2023-02-03"))
-  val idCard: IdCard = IdCard("GB", "1234567890", LocalDate.parse("2023-02-03"))
-  val phoneNumber: String = "+447123456789"
+  val ukAddress: UkAddress          = UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE")
+  val nonUkAddress: NonUkAddress    = NonUkAddress("99 Test Lane", "Testville", None, "DE")
+  val passport: Passport            = Passport("GB", "1234567890", LocalDate.parse("2023-02-03"))
+  val idCard: IdCard                = IdCard("GB", "1234567890", LocalDate.parse("2023-02-03"))
+  val phoneNumber: String           = "+447123456789"
 
   val registration: EstateRegistrationNoDeclaration = EstateRegistrationNoDeclaration(
     matchData = None,
@@ -87,34 +87,91 @@ class RegistrationAnswersPrintHelperSpec extends SpecBase {
         AnswerSection(
           headingKey = Some("taskList.estateName.label"),
           rows = Seq(
-            AnswerRow(label = messages("estateDetails.name.checkYourAnswersLabel"), answer = Html("Estate of John Doe"), None)
+            AnswerRow(
+              label = messages("estateDetails.name.checkYourAnswersLabel"),
+              answer = Html("Estate of John Doe"),
+              None
+            )
           )
         ),
         AnswerSection(
           headingKey = Some("taskList.personalRepresentative.label"),
           rows = Seq(
-            AnswerRow(label = messages("personalRep.individualOrBusiness.checkYourAnswersLabel"), answer = Html("Individual"), None),
-            AnswerRow(label = messages("personalRep.individual.name.checkYourAnswersLabel"), answer = Html("John Doe"), None),
-            AnswerRow(label = messages("personalRep.individual.dateOfBirth.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2000"), None),
-            AnswerRow(label = messages("personalRep.individual.ninoYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-            AnswerRow(label = messages("personalRep.individual.nino.checkYourAnswersLabel", name.displayName), answer = Html("AA 00 00 00 A"), None),
-            AnswerRow(label = messages("personalRep.individual.livesInTheUkYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-            AnswerRow(label = messages("personalRep.individual.address.checkYourAnswersLabel", name.displayName), answer = Html("21 Test Lane<br />Testville<br />NE1 1NE"), None),
-            AnswerRow(label = messages("personalRep.individual.emailYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-            AnswerRow(label = messages("personalRep.individual.telephoneNumber.checkYourAnswersLabel", name.displayName), answer = Html("+447123456789"), None)
+            AnswerRow(
+              label = messages("personalRep.individualOrBusiness.checkYourAnswersLabel"),
+              answer = Html("Individual"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.name.checkYourAnswersLabel"),
+              answer = Html("John Doe"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.dateOfBirth.checkYourAnswersLabel", name.displayName),
+              answer = Html("3 February 2000"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.ninoYesNo.checkYourAnswersLabel", name.displayName),
+              answer = Html("Yes"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.nino.checkYourAnswersLabel", name.displayName),
+              answer = Html("AA 00 00 00 A"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.livesInTheUkYesNo.checkYourAnswersLabel", name.displayName),
+              answer = Html("Yes"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.address.checkYourAnswersLabel", name.displayName),
+              answer = Html("21 Test Lane<br />Testville<br />NE1 1NE"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.emailYesNo.checkYourAnswersLabel", name.displayName),
+              answer = Html("No"),
+              None
+            ),
+            AnswerRow(
+              label = messages("personalRep.individual.telephoneNumber.checkYourAnswersLabel", name.displayName),
+              answer = Html("+447123456789"),
+              None
+            )
           )
         ),
         AnswerSection(
           headingKey = Some("taskList.personWhoDied.label"),
           rows = Seq(
             AnswerRow(label = messages("deceasedPerson.name.checkYourAnswersLabel"), answer = Html("John Doe"), None),
-            AnswerRow(label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2019"), None),
-            AnswerRow(label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-            AnswerRow(label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-            AnswerRow(label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None)
+            AnswerRow(
+              label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName),
+              answer = Html("3 February 2019"),
+              None
+            ),
+            AnswerRow(
+              label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName),
+              answer = Html("No"),
+              None
+            ),
+            AnswerRow(
+              label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName),
+              answer = Html("No"),
+              None
+            ),
+            AnswerRow(
+              label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName),
+              answer = Html("No"),
+              None
+            )
           )
         )
       )
     }
   }
+
 }

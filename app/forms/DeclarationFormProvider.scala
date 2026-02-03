@@ -27,28 +27,32 @@ import play.api.data.Forms.{mapping, optional}
 class DeclarationFormProvider @Inject() extends Mappings {
 
   private val fullName: Mapping[Name] = mapping(
-
-    "firstName" -> text("declaration.error.firstName.required")
+    "firstName"  -> text("declaration.error.firstName.required")
       .verifying(
         firstError(
           maxLength(35, s"declaration.error.firstName.length"),
           isNotEmpty("firstName", s"declaration.error.firstName.required"),
           regexp(Validation.nameRegex, s"declaration.error.firstName.invalid")
-        )),
-    "middleName" -> optional(text()
-      .transform(trimWhitespace, identity[String])
-      .verifying(
-        firstError(
-          maxLength(35, s"declaration.error.middleName.length"),
-          regexp(Validation.nameRegex, s"declaration.error.middleName.invalid"))
-      )).transform(emptyToNone, identity[Option[String]]),
-    "lastName" -> text("declaration.error.lastName.required")
+        )
+      ),
+    "middleName" -> optional(
+      text()
+        .transform(trimWhitespace, identity[String])
+        .verifying(
+          firstError(
+            maxLength(35, s"declaration.error.middleName.length"),
+            regexp(Validation.nameRegex, s"declaration.error.middleName.invalid")
+          )
+        )
+    ).transform(emptyToNone, identity[Option[String]]),
+    "lastName"   -> text("declaration.error.lastName.required")
       .verifying(
         firstError(
           maxLength(35, s"declaration.error.lastName.length"),
           isNotEmpty("lastName", s"declaration.error.lastName.required"),
           regexp(Validation.nameRegex, s"declaration.error.lastName.invalid")
-        ))
+        )
+      )
   )(Name.apply)(Name.unapply)
 
   def apply(): Form[Declaration] =
@@ -57,4 +61,5 @@ class DeclarationFormProvider @Inject() extends Mappings {
         "" -> fullName
       )(Declaration.apply)(Declaration.unapply)
     )
+
 }

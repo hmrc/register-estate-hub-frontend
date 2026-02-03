@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.language.LanguageUtils
 
 import java.time.{LocalDate, LocalDateTime}
 
-class DateFormatter @Inject()(languageUtils: LanguageUtils) {
+class DateFormatter @Inject() (languageUtils: LanguageUtils) {
 
   def formatDate(dateTime: LocalDateTime)(implicit messages: Messages): String =
     formatDate(dateTime.toLocalDate)

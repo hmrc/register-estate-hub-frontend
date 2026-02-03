@@ -26,7 +26,7 @@ class ContentSecurityPolicyReporterControllerSpec extends SpecBase {
 
   /*
     https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#testing_your_policy
-  */
+   */
 
   "ContentSecurityPolicyReporter Controller" must {
 
@@ -35,8 +35,7 @@ class ContentSecurityPolicyReporterControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None, AffinityGroup.Agent).build()
 
       val request = FakeRequest(POST, routes.ContentSecurityPolicyReporterController.report().url)
-        .withJsonBody(Json.parse(
-          """
+        .withJsonBody(Json.parse("""
             |{
             |  "csp-report": {
             |    "document-uri": "http://example.com/signup.html",
@@ -55,4 +54,5 @@ class ContentSecurityPolicyReporterControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

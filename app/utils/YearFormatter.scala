@@ -19,13 +19,14 @@ package utils
 import javax.inject.Inject
 import services.LocalDateService
 
-class YearFormatter @Inject()(localDateService: LocalDateService) {
+class YearFormatter @Inject() (localDateService: LocalDateService) {
 
   implicit class TwoDigitYearFormatter(twoDigitYear: String) {
+
     def fullYear: Int = {
       val century: Int = {
-        val currentYear = localDateService.now.getYear
-        val twoDigitCurrentYear = currentYear.twoDigitYear
+        val currentYear           = localDateService.now.getYear
+        val twoDigitCurrentYear   = currentYear.twoDigitYear
         val twoDigitTaxReturnYear = twoDigitYear.toInt
 
         if (twoDigitTaxReturnYear > twoDigitCurrentYear) {
@@ -37,16 +38,17 @@ class YearFormatter @Inject()(localDateService: LocalDateService) {
 
       s"$century$twoDigitYear".toInt
     }
+
   }
 
-  private implicit class ExtractYearParts(year: Int) {
-    def century: Int = {
-      year.toString.dropRight(2).toInt
-    }
+  implicit private class ExtractYearParts(year: Int) {
 
-    def twoDigitYear: Int = {
+    def century: Int =
+      year.toString.dropRight(2).toInt
+
+    def twoDigitYear: Int =
       year.toString.takeRight(2).toInt
-    }
+
   }
 
 }

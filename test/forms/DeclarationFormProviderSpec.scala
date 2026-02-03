@@ -29,9 +29,9 @@ class DeclarationFormProviderSpec extends StringFieldBehaviours {
 
   ".firstName" must {
 
-    val fieldName = "firstName"
+    val fieldName   = "firstName"
     val requiredKey = "declaration.error.firstName.required"
-    val lengthKey = "declaration.error.firstName.length"
+    val lengthKey   = "declaration.error.firstName.length"
 
     behave like fieldThatBindsValidData(
       form,
@@ -65,7 +65,6 @@ class DeclarationFormProviderSpec extends StringFieldBehaviours {
     val lengthKey = "declaration.error.middleName.length"
     val maxLength = 35
 
-
     behave like fieldWithMaxLength(
       form,
       fieldName,
@@ -73,10 +72,7 @@ class DeclarationFormProviderSpec extends StringFieldBehaviours {
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
-    behave like optionalField(
-      form,
-      fieldName,
-      validDataGenerator = RegexpGen.from(Validation.nameRegex))
+    behave like optionalField(form, fieldName, validDataGenerator = RegexpGen.from(Validation.nameRegex))
 
     "bind whitespace trim values" in {
       val result = form.bind(Map("firstName" -> "firstName", "middleName" -> "  middle  ", "lastName" -> "lastName"))
@@ -94,12 +90,11 @@ class DeclarationFormProviderSpec extends StringFieldBehaviours {
     }
   }
 
-
   ".lastName" must {
 
-    val fieldName = "lastName"
+    val fieldName   = "lastName"
     val requiredKey = "declaration.error.lastName.required"
-    val lengthKey = "declaration.error.lastName.length"
+    val lengthKey   = "declaration.error.lastName.length"
 
     behave like fieldThatBindsValidData(
       form,
@@ -126,4 +121,5 @@ class DeclarationFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey, Seq(fieldName))
     )
   }
+
 }

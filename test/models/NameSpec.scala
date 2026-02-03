@@ -22,7 +22,7 @@ import models.identification.Name
 class NameSpec extends SpecBase {
 
   private val nameWithNoMiddleName: Name = Name("Joe", None, "Bloggs")
-  private val nameWithMiddleName: Name = Name("Joe", Some("Joseph"), "Bloggs")
+  private val nameWithMiddleName: Name   = Name("Joe", Some("Joseph"), "Bloggs")
 
   ".displayName" must {
     "display first name and last name only" when {
@@ -47,4 +47,5 @@ class NameSpec extends SpecBase {
       }
     }
   }
+
 }

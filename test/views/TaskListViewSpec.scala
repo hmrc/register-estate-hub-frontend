@@ -27,13 +27,14 @@ import views.html.TaskListView
 class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
 
   private val estateName: Option[String] = Some("The estate of John Smith")
-  private val url: String = "url"
+  private val url: String                = "url"
 
-  private def tasks(estateDetailsEnabled: Boolean,
-            personalRepEnabled: Boolean,
-            deceasedPersonsEnabled: Boolean,
-            yearsOfTaxLiability: Boolean
-           ): CompletedTasks =
+  private def tasks(
+    estateDetailsEnabled: Boolean,
+    personalRepEnabled: Boolean,
+    deceasedPersonsEnabled: Boolean,
+    yearsOfTaxLiability: Boolean
+  ): CompletedTasks =
 
     CompletedTasks(
       details = estateDetailsEnabled,
@@ -42,7 +43,7 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
       yearsOfTaxLiability = yearsOfTaxLiability
     )
 
-  private def sections(tasks: CompletedTasks): List[Task] = {
+  private def sections(tasks: CompletedTasks): List[Task] =
     List(
       Task(
         Link(EstateName, url),
@@ -58,10 +59,9 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
       ),
       Task(
         Link(YearsOfTaxLiability, url),
-        TagStatus.tagForTaxLiability(tasks.yearsOfTaxLiability, featureEnabled = true, true, tasks.deceased )
+        TagStatus.tagForTaxLiability(tasks.yearsOfTaxLiability, featureEnabled = true, true, tasks.deceased)
       )
     )
-  }
 
   "TaskList view" must {
 
@@ -69,7 +69,12 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
 
       val view = viewFor[TaskListView](Some(emptyUserAnswers))
 
-      val completedTasks = tasks(estateDetailsEnabled = true, personalRepEnabled = true, deceasedPersonsEnabled = true, yearsOfTaxLiability = true )
+      val completedTasks = tasks(
+        estateDetailsEnabled = true,
+        personalRepEnabled = true,
+        deceasedPersonsEnabled = true,
+        yearsOfTaxLiability = true
+      )
 
       val tasksList = sections(completedTasks)
 
@@ -90,12 +95,18 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
 
         "all sections are completed" in {
 
-          val completedTasks = tasks(estateDetailsEnabled = true, personalRepEnabled = true, deceasedPersonsEnabled = true, yearsOfTaxLiability = true)
+          val completedTasks = tasks(
+            estateDetailsEnabled = true,
+            personalRepEnabled = true,
+            deceasedPersonsEnabled = true,
+            yearsOfTaxLiability = true
+          )
 
           val tasksList = sections(completedTasks)
 
-          val applyView = view.apply(estateName, tasksList, isTaskListComplete = true, Organisation)(fakeRequest, messages)
-          val doc = asDocument(applyView)
+          val applyView =
+            view.apply(estateName, tasksList, isTaskListComplete = true, Organisation)(fakeRequest, messages)
+          val doc       = asDocument(applyView)
 
           assertRenderedById(doc, "summary-heading")
           assertRenderedById(doc, "summary-paragraph")
@@ -108,12 +119,18 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
 
         "not all sections are completed" in {
 
-          val completedTasks = tasks(estateDetailsEnabled = false, personalRepEnabled = false, deceasedPersonsEnabled = false, yearsOfTaxLiability = false)
+          val completedTasks = tasks(
+            estateDetailsEnabled = false,
+            personalRepEnabled = false,
+            deceasedPersonsEnabled = false,
+            yearsOfTaxLiability = false
+          )
 
           val tasksList = sections(completedTasks)
 
-          val applyView = view.apply(estateName, tasksList, isTaskListComplete = false, Organisation)(fakeRequest, messages)
-          val doc = asDocument(applyView)
+          val applyView =
+            view.apply(estateName, tasksList, isTaskListComplete = false, Organisation)(fakeRequest, messages)
+          val doc       = asDocument(applyView)
 
           assertNotRenderedById(doc, "summary-heading")
           assertNotRenderedById(doc, "summary-paragraph")
@@ -127,7 +144,12 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
 
       val view = viewFor[TaskListView](Some(emptyUserAnswers))
 
-      val completedTasks = tasks(estateDetailsEnabled = true, personalRepEnabled = true, deceasedPersonsEnabled = true, yearsOfTaxLiability = true)
+      val completedTasks = tasks(
+        estateDetailsEnabled = true,
+        personalRepEnabled = true,
+        deceasedPersonsEnabled = true,
+        yearsOfTaxLiability = true
+      )
 
       val tasksList = sections(completedTasks)
 
@@ -160,7 +182,12 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
       "render Agent details link" in {
         val view = viewFor[TaskListView](Some(emptyUserAnswers))
 
-        val completedTasks = tasks(estateDetailsEnabled = true, personalRepEnabled = true, deceasedPersonsEnabled = true, yearsOfTaxLiability = true)
+        val completedTasks = tasks(
+          estateDetailsEnabled = true,
+          personalRepEnabled = true,
+          deceasedPersonsEnabled = true,
+          yearsOfTaxLiability = true
+        )
 
         val tasksList = sections(completedTasks)
 
@@ -173,4 +200,5 @@ class TaskListViewSpec extends ViewBehaviours with TaskListViewBehaviours {
     }
 
   }
+
 }

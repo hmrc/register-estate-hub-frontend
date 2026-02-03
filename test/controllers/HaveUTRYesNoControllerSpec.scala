@@ -31,7 +31,7 @@ import views.html.HaveUTRYesNoView
 
 class HaveUTRYesNoControllerSpec extends SpecBase {
 
-  val formProvider = new YesNoFormProvider()
+  val formProvider        = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
 
   lazy val haveUTRRoute: String = routes.HaveUTRYesNoController.onPageLoad().url
@@ -105,10 +105,12 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
     "redirect to the next page when valid data is submitted" in {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(Seq(
-            bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
-            bind[SessionRepository].toInstance(sessionRepository)
-          ))
+          .overrides(
+            Seq(
+              bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
+              bind[SessionRepository].toInstance(sessionRepository)
+            )
+          )
           .build()
 
       val request =
@@ -178,6 +180,6 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
-
   }
+
 }

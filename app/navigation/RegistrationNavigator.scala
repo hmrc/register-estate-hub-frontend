@@ -24,32 +24,38 @@ import pages._
 import play.api.mvc.Call
 
 @Singleton
-class RegistrationNavigator @Inject()(config: FrontendAppConfig) extends Navigator {
+class RegistrationNavigator @Inject() (config: FrontendAppConfig) extends Navigator {
 
   override def nextPage(page: Page, userAnswers: UserAnswers): Call =
     routes()(page)(userAnswers)
 
   private def haveAUtrRoute(ua: UserAnswers) =
-      ua.get(EstateRegisteredOnlineYesNoPage) match {
-        case Some(true) => yesNoNav(
-          ua, HaveUTRYesNoPage,
+    ua.get(EstateRegisteredOnlineYesNoPage) match {
+      case Some(true)  =>
+        yesNoNav(
+          ua,
+          HaveUTRYesNoPage,
           Call("GET", config.maintainAnEstateFrontendUrl),
-          rts.UTRSentInPostController.onPageLoad())
-        case Some(false) => yesNoNav(
-          ua, HaveUTRYesNoPage,
+          rts.UTRSentInPostController.onPageLoad()
+        )
+      case Some(false) =>
+        yesNoNav(
+          ua,
+          HaveUTRYesNoPage,
           rts.MustRegisterEstateController.onPageLoad(),
-          Call("GET", config.suitabilityUrl))
-        case None => controllers.routes.SessionExpiredController.onPageLoad
-      }
+          Call("GET", config.suitabilityUrl)
+        )
+      case None        => controllers.routes.SessionExpiredController.onPageLoad
+    }
 
-  private def yesNoNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call = {
+  private def yesNoNav(ua: UserAnswers, fromPage: QuestionPage[Boolean], yesCall: => Call, noCall: => Call): Call =
     ua.get(fromPage)
       .map(if (_) yesCall else noCall)
       .getOrElse(controllers.routes.SessionExpiredController.onPageLoad)
-  }
 
   def routes(): PartialFunction[Page, UserAnswers => Call] = {
     case EstateRegisteredOnlineYesNoPage => _ => controllers.routes.HaveUTRYesNoController.onPageLoad()
-    case HaveUTRYesNoPage => haveAUtrRoute
+    case HaveUTRYesNoPage                => haveAUtrRoute
   }
+
 }

@@ -21,6 +21,8 @@ import play.api.libs.json.{Reads, __}
 case class EstateName(name: Option[String])
 
 object EstateName {
+
   implicit val reads: Reads[EstateName] =
     (__ \ "name").readNullable[String].map(EstateName.apply)
+
 }

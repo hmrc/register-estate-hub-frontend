@@ -37,60 +37,53 @@ import views.html.DeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeclarationController @Inject()(
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DeclarationView,
-                                       formProvider: DeclarationFormProvider,
-                                       actions: Actions,
-                                       repository: SessionRepository,
-                                       connector: EstatesConnector,
-                                       errorHandler: ErrorHandler
-                                     )(implicit ec: ExecutionContext
-) extends FrontendBaseController with I18nSupport with Logging {
+class DeclarationController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  view: DeclarationView,
+  formProvider: DeclarationFormProvider,
+  actions: Actions,
+  repository: SessionRepository,
+  connector: EstatesConnector,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
   val form: Form[Declaration] = formProvider()
 
-  def onPageLoad: Action[AnyContent] = actions.authWithData {
-    implicit request =>
+  def onPageLoad: Action[AnyContent] = actions.authWithData { implicit request =>
+    val preparedForm = request.userAnswers.get(DeclarationPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(DeclarationPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, request.affinityGroup))
+    Ok(view(preparedForm, request.affinityGroup))
   }
 
-  def onSubmit: Action[AnyContent] = actions.authWithData.async {
-
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.affinityGroup))),
-
-        declaration => {
-
+  def onSubmit: Action[AnyContent] = actions.authWithData.async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Future.successful(BadRequest(view(formWithErrors, request.affinityGroup))),
+        declaration =>
           connector.register(declaration) flatMap {
-            case TRNResponse(trn) =>
+            case TRNResponse(trn)                      =>
               for {
-                updatedAnswers <- Future.fromTry(request.userAnswers
-                  .set(DeclarationPage, declaration)
-                  .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                  .flatMap(_.set(TRNPage, trn))
-                )
-                _ <- repository.set(updatedAnswers)
-              } yield {
-                Redirect(controllers.routes.ConfirmationController.onPageLoad())
-              }
+                updatedAnswers <- Future.fromTry(
+                                    request.userAnswers
+                                      .set(DeclarationPage, declaration)
+                                      .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                                      .flatMap(_.set(TRNPage, trn))
+                                  )
+                _              <- repository.set(updatedAnswers)
+              } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
             case DeclarationResponse.AlreadyRegistered =>
               logger.error(s"[Session ID: ${Session.id(hc)}] estate already registered")
               errorHandler.badRequestTemplate.map(html => BadRequest(html))
-            case _ =>
+            case _                                     =>
               logger.error(s"[Session ID: ${Session.id(hc)}] something went wrong")
               errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
           }
-        }
       )
   }
+
 }

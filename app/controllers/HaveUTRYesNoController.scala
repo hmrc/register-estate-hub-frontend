@@ -33,48 +33,44 @@ import views.html.HaveUTRYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class HaveUTRYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        @EstateRegistration navigator: Navigator,
-                                        actions: Actions,
-                                        formProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: HaveUTRYesNoView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class HaveUTRYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  @EstateRegistration navigator: Navigator,
+  actions: Actions,
+  formProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: HaveUTRYesNoView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
 
   val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions() {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions() { implicit request =>
+    val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, isOrgCredUser))
+    Ok(view(preparedForm, isOrgCredUser))
   }
 
-  def onSubmit(): Action[AnyContent] = actions().async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, isOrgCredUser))),
-
-        value => {
+  def onSubmit(): Action[AnyContent] = actions().async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Future.successful(BadRequest(view(formWithErrors, isOrgCredUser))),
+        value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(HaveUTRYesNoPage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(HaveUTRYesNoPage, updatedAnswers))
-        }
       )
   }
 
-  private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean = {
+  private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean =
     request.affinityGroup == Organisation
-  }
+
 }

@@ -18,8 +18,7 @@ package models.identification
 
 import play.api.libs.json.{Format, Json}
 
-case class IdentificationOrgType(utr: Option[String],
-                                 address: Option[Address])
+case class IdentificationOrgType(utr: Option[String], address: Option[Address])
 
 object IdentificationOrgType {
   implicit val trustBeneficiaryIdentificationFormat: Format[IdentificationOrgType] = Json.format[IdentificationOrgType]

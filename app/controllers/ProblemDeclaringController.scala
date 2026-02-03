@@ -25,16 +25,15 @@ import views.html.ProblemDeclaringView
 
 import scala.concurrent.Future
 
-class ProblemDeclaringController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            actions: Actions,
-                                            problemDeclaringView: ProblemDeclaringView,
-                                            val controllerComponents: MessagesControllerComponents
-                                          ) extends FrontendBaseController with I18nSupport {
+class ProblemDeclaringController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  problemDeclaringView: ProblemDeclaringView,
+  val controllerComponents: MessagesControllerComponents
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData.async {
-    implicit request =>
-      Future.successful(InternalServerError(problemDeclaringView()))
+  def onPageLoad(): Action[AnyContent] = actions.authWithData.async { implicit request =>
+    Future.successful(InternalServerError(problemDeclaringView()))
   }
 
 }

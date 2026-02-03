@@ -27,11 +27,7 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
 
     val applyView = view.apply()(fakeRequest, messages)
 
-    behave like normalPage(applyView,
-      "problemDeclaring",
-      "p1",
-      "p2",
-      "contact.link"
-    )
+    behave like normalPage(applyView, "problemDeclaring", "p1", "p2", "contact.link")
   }
+
 }

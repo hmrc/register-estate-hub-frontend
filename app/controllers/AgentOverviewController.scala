@@ -26,26 +26,25 @@ import views.html.AgentOverviewView
 
 import scala.concurrent.Future
 
-class AgentOverviewController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       val appConfig: FrontendAppConfig,
-                                       identify: IdentifierAction,
-                                       hasAgentAffinityGroup: RequireStateActionProviderImpl,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: AgentOverviewView
-                                     ) extends FrontendBaseController with I18nSupport {
+class AgentOverviewController @Inject() (
+  override val messagesApi: MessagesApi,
+  val appConfig: FrontendAppConfig,
+  identify: IdentifierAction,
+  hasAgentAffinityGroup: RequireStateActionProviderImpl,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  view: AgentOverviewView
+) extends FrontendBaseController with I18nSupport {
 
   private def actions() = identify andThen hasAgentAffinityGroup()
 
-  def onPageLoad(): Action[AnyContent] = actions() {
-    implicit request =>
-      Ok(view())
+  def onPageLoad(): Action[AnyContent] = actions() { implicit request =>
+    Ok(view())
   }
 
   def onSubmit(): Action[AnyContent] = actions().async {
-      Future.successful(Redirect(routes.EstateRegisteredOnlineYesNoController.onPageLoad()))
+    Future.successful(Redirect(routes.EstateRegisteredOnlineYesNoController.onPageLoad()))
   }
 
 }

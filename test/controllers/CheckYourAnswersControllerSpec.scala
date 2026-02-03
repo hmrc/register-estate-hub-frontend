@@ -59,4 +59,5 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

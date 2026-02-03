@@ -19,8 +19,7 @@ package models.entities
 import models.entities.personalrep.PersonalRepresentativeType
 import play.api.libs.json.{Format, Json}
 
-case class EntitiesType(personalRepresentative: PersonalRepresentativeType,
-                        deceased: DeceasedPerson)
+case class EntitiesType(personalRepresentative: PersonalRepresentativeType, deceased: DeceasedPerson)
 
 object EntitiesType {
   implicit val entitiesTypeFormat: Format[EntitiesType] = Json.format[EntitiesType]

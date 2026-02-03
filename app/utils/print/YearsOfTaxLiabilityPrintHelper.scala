@@ -25,9 +25,11 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class YearsOfTaxLiabilityPrintHelper @Inject()(yearFormatter: YearFormatter,
-                                               taxYearImplicits: TaxYearImplicits,
-                                               checkAnswersFormatters: CheckAnswersFormatters) {
+class YearsOfTaxLiabilityPrintHelper @Inject() (
+  yearFormatter: YearFormatter,
+  taxYearImplicits: TaxYearImplicits,
+  checkAnswersFormatters: CheckAnswersFormatters
+) {
 
   import taxYearImplicits._
   import yearFormatter._
@@ -40,14 +42,13 @@ class YearsOfTaxLiabilityPrintHelper @Inject()(yearFormatter: YearFormatter,
         yesNoQuestion(value = false, "taxLiability.wasTaxDeclared", taxYear)
       )
 
-    yearReturns.zipWithIndex.foldLeft(Seq[AnswerSection]()) {
-      case (acc, (yearReturn, index)) =>
-        val taxYear: TaxYear = getTaxYear(yearReturn.taxReturnYear)
-        acc :+ AnswerSection(
-          headingKey = if (index == 0) Some("taskList.yearsOfTaxLiability.label") else None,
-          rows = rows(taxYear),
-          subHeading = Some(messages("taskList.yearOfTaxLiability.label", taxYear.start, taxYear.end))
-        )
+    yearReturns.zipWithIndex.foldLeft(Seq[AnswerSection]()) { case (acc, (yearReturn, index)) =>
+      val taxYear: TaxYear = getTaxYear(yearReturn.taxReturnYear)
+      acc :+ AnswerSection(
+        headingKey = if (index == 0) Some("taskList.yearsOfTaxLiability.label") else None,
+        rows = rows(taxYear),
+        subHeading = Some(messages("taskList.yearOfTaxLiability.label", taxYear.start, taxYear.end))
+      )
     }
   }
 
@@ -56,7 +57,9 @@ class YearsOfTaxLiabilityPrintHelper @Inject()(yearFormatter: YearFormatter,
     TaxYear(startYear = endYear - 1)
   }
 
-  private def yesNoQuestion(value: Boolean, labelKey: String, taxYear: TaxYear)(implicit messages: Messages): AnswerRow =
+  private def yesNoQuestion(value: Boolean, labelKey: String, taxYear: TaxYear)(implicit
+    messages: Messages
+  ): AnswerRow =
     AnswerRow(
       messages(s"$labelKey.checkYourAnswersLabel", taxYear.start, taxYear.end),
       checkAnswersFormatters.yesOrNo(value)

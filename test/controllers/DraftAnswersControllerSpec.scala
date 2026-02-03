@@ -35,16 +35,16 @@ import scala.concurrent.Future
 
 class DraftAnswersControllerSpec extends SpecBase {
 
-  val estateName: String = "Estate of John Doe"
-  val name: Name = Name("John", None, "Doe")
-  val dateOfBirth: LocalDate = LocalDate.parse("2000-02-03")
-  val dateOfDeath: LocalDate = LocalDate.parse("2019-02-03")
+  val estateName: String            = "Estate of John Doe"
+  val name: Name                    = Name("John", None, "Doe")
+  val dateOfBirth: LocalDate        = LocalDate.parse("2000-02-03")
+  val dateOfDeath: LocalDate        = LocalDate.parse("2019-02-03")
   val nino: NationalInsuranceNumber = NationalInsuranceNumber("AA000000A")
-  val ukAddress: UkAddress = UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE")
-  val nonUkAddress: NonUkAddress = NonUkAddress("99 Test Lane", "Testville", None, "DE")
-  val passport: Passport = Passport("GB", "1234567890", LocalDate.parse("2023-02-03"))
-  val idCard: IdCard = IdCard("GB", "1234567890", LocalDate.parse("2023-02-03"))
-  val phoneNumber: String = "+447123456789"
+  val ukAddress: UkAddress          = UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE")
+  val nonUkAddress: NonUkAddress    = NonUkAddress("99 Test Lane", "Testville", None, "DE")
+  val passport: Passport            = Passport("GB", "1234567890", LocalDate.parse("2023-02-03"))
+  val idCard: IdCard                = IdCard("GB", "1234567890", LocalDate.parse("2023-02-03"))
+  val phoneNumber: String           = "+447123456789"
 
   val registration: EstateRegistrationNoDeclaration = EstateRegistrationNoDeclaration(
     matchData = None,

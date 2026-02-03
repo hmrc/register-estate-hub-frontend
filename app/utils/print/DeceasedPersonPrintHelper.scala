@@ -24,37 +24,38 @@ import viewmodels.{AnswerRow, AnswerSection}
 import java.time.LocalDate
 import javax.inject.Inject
 
-class DeceasedPersonPrintHelper @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
+class DeceasedPersonPrintHelper @Inject() (checkAnswersFormatters: CheckAnswersFormatters) {
 
-  def dateOfBirth(dateOfBirth: Option[LocalDate], converter: AnswerRowConverter): Seq[AnswerRow] = {
+  def dateOfBirth(dateOfBirth: Option[LocalDate], converter: AnswerRowConverter): Seq[AnswerRow] =
     dateOfBirth match {
-      case Some(date) => Seq(
-        converter.yesNoQuestion(boolean = true, "deceasedPerson.dateOfBirthYesNo"),
-        converter.dateQuestion(date, "deceasedPerson.dateOfBirth")
-      )
-      case _ => Seq(converter.yesNoQuestion(boolean = false, "deceasedPerson.dateOfBirthYesNo"))
+      case Some(date) =>
+        Seq(
+          converter.yesNoQuestion(boolean = true, "deceasedPerson.dateOfBirthYesNo"),
+          converter.dateQuestion(date, "deceasedPerson.dateOfBirth")
+        )
+      case _          => Seq(converter.yesNoQuestion(boolean = false, "deceasedPerson.dateOfBirthYesNo"))
     }
-  }
 
-  def nino(nino: Option[NationalInsuranceNumber], converter: AnswerRowConverter): Seq[AnswerRow] = {
+  def nino(nino: Option[NationalInsuranceNumber], converter: AnswerRowConverter): Seq[AnswerRow] =
     nino match {
-      case Some(NationalInsuranceNumber(x)) => Seq(
-        converter.yesNoQuestion(boolean = true, "deceasedPerson.ninoYesNo"),
-        converter.ninoQuestion(x, "deceasedPerson.nino")
-      )
-      case _ => Seq(converter.yesNoQuestion(boolean = false, "deceasedPerson.ninoYesNo"))
+      case Some(NationalInsuranceNumber(x)) =>
+        Seq(
+          converter.yesNoQuestion(boolean = true, "deceasedPerson.ninoYesNo"),
+          converter.ninoQuestion(x, "deceasedPerson.nino")
+        )
+      case _                                => Seq(converter.yesNoQuestion(boolean = false, "deceasedPerson.ninoYesNo"))
     }
-  }
 
   def address(deceasedPerson: DeceasedPerson, converter: AnswerRowConverter): Seq[AnswerRow] = {
 
     val addressYesNoRow: Option[AnswerRow] = deceasedPerson.nino match {
-      case None => Some(converter.yesNoQuestion(boolean = deceasedPerson.addressYesNo.get, "deceasedPerson.addressYesNo"))
-      case _ => None
+      case None =>
+        Some(converter.yesNoQuestion(boolean = deceasedPerson.addressYesNo.get, "deceasedPerson.addressYesNo"))
+      case _    => None
     }
 
     val addressUkYesNoRow: Option[AnswerRow] = deceasedPerson.address.map {
-      case _: UkAddress => converter.yesNoQuestion(boolean = true, "deceasedPerson.livedInTheUkYesNo")
+      case _: UkAddress    => converter.yesNoQuestion(boolean = true, "deceasedPerson.livedInTheUkYesNo")
       case _: NonUkAddress => converter.yesNoQuestion(boolean = false, "deceasedPerson.livedInTheUkYesNo")
     }
 
@@ -79,4 +80,5 @@ class DeceasedPersonPrintHelper @Inject()(checkAnswersFormatters: CheckAnswersFo
 
     AnswerSection(Some("taskList.personWhoDied.label"), rows)
   }
+
 }

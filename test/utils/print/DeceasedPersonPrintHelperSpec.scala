@@ -29,12 +29,12 @@ class DeceasedPersonPrintHelperSpec extends SpecBase {
 
   val helper: DeceasedPersonPrintHelper = injector.instanceOf[DeceasedPersonPrintHelper]
 
-  val name: Name = Name("John", None, "Doe")
-  val dateOfBirth: Option[LocalDate] = Some(LocalDate.parse("2000-02-03"))
-  val dateOfDeath: LocalDate = LocalDate.parse("2019-02-03")
+  val name: Name                            = Name("John", None, "Doe")
+  val dateOfBirth: Option[LocalDate]        = Some(LocalDate.parse("2000-02-03"))
+  val dateOfDeath: LocalDate                = LocalDate.parse("2019-02-03")
   val nino: Option[NationalInsuranceNumber] = Some(NationalInsuranceNumber("AA000000A"))
-  val ukAddress: Option[UkAddress] = Some(UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE"))
-  val nonUkAddress: Option[NonUkAddress] = Some(NonUkAddress("99 Test Lane", "Testville", None, "DE"))
+  val ukAddress: Option[UkAddress]          = Some(UkAddress("21 Test Lane", "Testville", None, None, "NE1 1NE"))
+  val nonUkAddress: Option[NonUkAddress]    = Some(NonUkAddress("99 Test Lane", "Testville", None, "DE"))
 
   "DeceasedPersonPrintHelper" must {
 
@@ -55,10 +55,26 @@ class DeceasedPersonPrintHelperSpec extends SpecBase {
         headingKey = Some("taskList.personWhoDied.label"),
         rows = Seq(
           AnswerRow(label = messages("deceasedPerson.name.checkYourAnswersLabel"), answer = Html("John Doe"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2019"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-          AnswerRow(label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-          AnswerRow(label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None)
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName),
+            answer = Html("3 February 2019"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("No"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("No"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("No"),
+            None
+          )
         )
       )
     }
@@ -80,13 +96,41 @@ class DeceasedPersonPrintHelperSpec extends SpecBase {
         headingKey = Some("taskList.personWhoDied.label"),
         rows = Seq(
           AnswerRow(label = messages("deceasedPerson.name.checkYourAnswersLabel"), answer = Html("John Doe"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2019"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfBirth.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2000"), None),
-          AnswerRow(label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-          AnswerRow(label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-          AnswerRow(label = messages("deceasedPerson.livedInTheUkYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-          AnswerRow(label = messages("deceasedPerson.address.checkYourAnswersLabel", name.displayName), answer = Html("21 Test Lane<br />Testville<br />NE1 1NE"), None)
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName),
+            answer = Html("3 February 2019"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("Yes"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfBirth.checkYourAnswersLabel", name.displayName),
+            answer = Html("3 February 2000"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("No"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("Yes"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.livedInTheUkYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("Yes"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.address.checkYourAnswersLabel", name.displayName),
+            answer = Html("21 Test Lane<br />Testville<br />NE1 1NE"),
+            None
+          )
         )
       )
     }
@@ -108,13 +152,41 @@ class DeceasedPersonPrintHelperSpec extends SpecBase {
         headingKey = Some("taskList.personWhoDied.label"),
         rows = Seq(
           AnswerRow(label = messages("deceasedPerson.name.checkYourAnswersLabel"), answer = Html("John Doe"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2019"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfBirth.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2000"), None),
-          AnswerRow(label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-          AnswerRow(label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-          AnswerRow(label = messages("deceasedPerson.livedInTheUkYesNo.checkYourAnswersLabel", name.displayName), answer = Html("No"), None),
-          AnswerRow(label = messages("deceasedPerson.address.checkYourAnswersLabel", name.displayName), answer = Html("99 Test Lane<br />Testville<br />Germany"), None)
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName),
+            answer = Html("3 February 2019"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("Yes"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfBirth.checkYourAnswersLabel", name.displayName),
+            answer = Html("3 February 2000"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("No"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.addressYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("Yes"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.livedInTheUkYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("No"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.address.checkYourAnswersLabel", name.displayName),
+            answer = Html("99 Test Lane<br />Testville<br />Germany"),
+            None
+          )
         )
       )
     }
@@ -136,13 +208,34 @@ class DeceasedPersonPrintHelperSpec extends SpecBase {
         headingKey = Some("taskList.personWhoDied.label"),
         rows = Seq(
           AnswerRow(label = messages("deceasedPerson.name.checkYourAnswersLabel"), answer = Html("John Doe"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2019"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-          AnswerRow(label = messages("deceasedPerson.dateOfBirth.checkYourAnswersLabel", name.displayName), answer = Html("3 February 2000"), None),
-          AnswerRow(label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName), answer = Html("Yes"), None),
-          AnswerRow(label = messages("deceasedPerson.nino.checkYourAnswersLabel", name.displayName), answer = Html("AA 00 00 00 A"), None)
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfDeath.checkYourAnswersLabel", name.displayName),
+            answer = Html("3 February 2019"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfBirthYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("Yes"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.dateOfBirth.checkYourAnswersLabel", name.displayName),
+            answer = Html("3 February 2000"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.ninoYesNo.checkYourAnswersLabel", name.displayName),
+            answer = Html("Yes"),
+            None
+          ),
+          AnswerRow(
+            label = messages("deceasedPerson.nino.checkYourAnswersLabel", name.displayName),
+            answer = Html("AA 00 00 00 A"),
+            None
+          )
         )
       )
     }
   }
+
 }

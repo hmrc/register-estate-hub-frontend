@@ -20,9 +20,7 @@ import java.time.LocalDate
 
 import play.api.libs.json.{Format, Json}
 
-case class PassportType(number: String,
-                        expirationDate: LocalDate,
-                        countryOfIssue: String)
+case class PassportType(number: String, expirationDate: LocalDate, countryOfIssue: String)
 
 object PassportType {
   implicit val passportTypeFormat: Format[PassportType] = Json.format[PassportType]

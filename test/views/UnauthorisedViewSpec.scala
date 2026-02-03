@@ -33,9 +33,8 @@ class UnauthorisedViewSpec extends ViewBehaviours {
 
     val doc: Document = Jsoup.parse(applyView.toString())
 
-    "contain the expected heading" in {
+    "contain the expected heading" in
       assert(doc.select("h1").text == messages("unauthorised.heading"))
-    }
 
     "contain the correct paragraphs" in {
       val paragraphs = doc.select("p").eachText()
@@ -52,4 +51,5 @@ class UnauthorisedViewSpec extends ViewBehaviours {
 
     behave like normalPage(applyView, "unauthorised")
   }
+
 }

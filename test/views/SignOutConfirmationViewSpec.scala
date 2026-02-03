@@ -33,4 +33,5 @@ class SignOutConfirmationViewSpec extends ViewBehaviours {
 
     behave like pageWithoutLogoutButton(applyView)
   }
+
 }

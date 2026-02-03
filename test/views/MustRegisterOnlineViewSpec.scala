@@ -32,4 +32,5 @@ class MustRegisterOnlineViewSpec extends ViewBehaviours {
     behave like normalPage(applyView, "mustRegisterEstate")
 
   }
+
 }

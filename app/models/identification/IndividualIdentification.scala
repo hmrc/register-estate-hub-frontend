@@ -24,29 +24,28 @@ import play.api.libs.json._
 sealed trait IndividualIdentification
 
 object IndividualIdentification {
+
   implicit val reads: Reads[IndividualIdentification] =
     (__ \ Symbol("passport") \ Symbol("isPassport")).read[Boolean].flatMap[IndividualIdentification] {
-      case true => (__ \ Symbol("passport")).read[Passport].widen[IndividualIdentification]
+      case true  => (__ \ Symbol("passport")).read[Passport].widen[IndividualIdentification]
       case false => (__ \ Symbol("passport")).read[IdCard].widen[IndividualIdentification]
     } orElse __.read[NationalInsuranceNumber].widen[IndividualIdentification]
 
   implicit val writes: Writes[IndividualIdentification] = Writes {
     case ni: NationalInsuranceNumber => Json.toJson(ni)(NationalInsuranceNumber.format)
-    case p: Passport => Json.obj("passport" -> Json.toJson(p)(Passport.format))
-    case i: IdCard => Json.obj("passport" -> Json.toJson(i)(IdCard.format))
+    case p: Passport                 => Json.obj("passport" -> Json.toJson(p)(Passport.format))
+    case i: IdCard                   => Json.obj("passport" -> Json.toJson(i)(IdCard.format))
   }
+
 }
 
 case class NationalInsuranceNumber(nino: String) extends IndividualIdentification
 
-object NationalInsuranceNumber{
+object NationalInsuranceNumber {
   implicit val format: Format[NationalInsuranceNumber] = Json.format[NationalInsuranceNumber]
 }
 
-case class Passport(countryOfIssue: String,
-                    number: String,
-                    expirationDate: LocalDate
-                   ) extends IndividualIdentification
+case class Passport(countryOfIssue: String, number: String, expirationDate: LocalDate) extends IndividualIdentification
 
 object Passport {
 
@@ -59,21 +58,19 @@ object Passport {
     ((__ \ Symbol("countryOfIssue")).write[String] and
       (__ \ Symbol("number")).write[String] and
       (__ \ Symbol("expirationDate")).write[LocalDate] and
-      (__ \ Symbol("isPassport")).write[Boolean]
-      ).apply(passport => (
-      passport.countryOfIssue,
-      passport.number,
-      passport.expirationDate,
-      true
-    ))
+      (__ \ Symbol("isPassport")).write[Boolean]).apply(passport =>
+      (
+        passport.countryOfIssue,
+        passport.number,
+        passport.expirationDate,
+        true
+      )
+    )
 
   implicit val format: Format[Passport] = Format[Passport](reads, writes)
 }
 
-case class IdCard(countryOfIssue: String,
-                  number: String,
-                  expirationDate: LocalDate
-                 ) extends IndividualIdentification
+case class IdCard(countryOfIssue: String, number: String, expirationDate: LocalDate) extends IndividualIdentification
 
 object IdCard {
 
@@ -86,13 +83,14 @@ object IdCard {
     ((__ \ Symbol("countryOfIssue")).write[String] and
       (__ \ Symbol("number")).write[String] and
       (__ \ Symbol("expirationDate")).write[LocalDate] and
-      (__ \ Symbol("isPassport")).write[Boolean]
-      ).apply(idCard => (
-      idCard.countryOfIssue,
-      idCard.number,
-      idCard.expirationDate,
-      false
-    ))
+      (__ \ Symbol("isPassport")).write[Boolean]).apply(idCard =>
+      (
+        idCard.countryOfIssue,
+        idCard.number,
+        idCard.expirationDate,
+        false
+      )
+    )
 
   implicit val format: Format[IdCard] = Format[IdCard](reads, writes)
 }

@@ -24,11 +24,11 @@ import utils.Session
 
 sealed trait DeclarationResponse
 
-final case class TRNResponse(trn : String) extends DeclarationResponse
+final case class TRNResponse(trn: String) extends DeclarationResponse
 
 object TRNResponse {
 
-  implicit val formats : Format[TRNResponse] = Json.format[TRNResponse]
+  implicit val formats: Format[TRNResponse] = Json.format[TRNResponse]
 
 }
 
@@ -48,11 +48,11 @@ object DeclarationResponse extends Logging {
       logger.info(s"[Session ID: ${Session.id(hc)}] response status received from estates api: ${response.status}")
 
       response.status match {
-        case OK =>
+        case OK       =>
           response.json.as[TRNResponse]
         case CONFLICT =>
           AlreadyRegistered
-        case _ =>
+        case _        =>
           InternalServerError
       }
     }

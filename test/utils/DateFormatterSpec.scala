@@ -23,9 +23,9 @@ import uk.gov.hmrc.play.language.LanguageUtils
 
 class DateFormatterSpec extends SpecBase {
 
-  val languageUtils: LanguageUtils = injector.instanceOf[LanguageUtils]
+  val languageUtils: LanguageUtils  = injector.instanceOf[LanguageUtils]
   val englishMessages: MessagesImpl = MessagesImpl(Lang("en"), messagesApi)
-  val welshMessages: MessagesImpl = MessagesImpl(Lang("cy"), messagesApi)
+  val welshMessages: MessagesImpl   = MessagesImpl(Lang("cy"), messagesApi)
 
   "Date Formatter" must {
 

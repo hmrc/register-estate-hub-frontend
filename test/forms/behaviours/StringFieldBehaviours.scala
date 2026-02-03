@@ -21,29 +21,20 @@ import play.api.data.{Form, FormError}
 
 trait StringFieldBehaviours extends FieldBehaviours with OptionFieldBehaviours {
 
-  def fieldWithMaxLength(form: Form[_],
-                         fieldName: String,
-                         maxLength: Int,
-                         lengthError: FormError): Unit = {
+  def fieldWithMaxLength(form: Form[_], fieldName: String, maxLength: Int, lengthError: FormError): Unit =
 
-    s"not bind strings longer than $maxLength characters" in {
-
-      forAll(stringsLongerThan(maxLength) -> "longString") {
-        string =>
-          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
-          result.errors shouldEqual Seq(lengthError)
+    s"not bind strings longer than $maxLength characters" in
+      forAll(stringsLongerThan(maxLength) -> "longString") { string =>
+        val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+        result.errors shouldEqual Seq(lengthError)
       }
-    }
-  }
 
-  def nonEmptyField(form: Form[_],
-                    fieldName: String,
-                    requiredError: FormError): Unit = {
+  def nonEmptyField(form: Form[_], fieldName: String, requiredError: FormError): Unit =
 
     "not bind spaces" in {
 
       val result = form.bind(Map(fieldName -> "    ")).apply(fieldName)
       result.errors shouldBe Seq(requiredError)
     }
-  }
+
 }

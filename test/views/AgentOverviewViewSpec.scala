@@ -31,4 +31,5 @@ class AgentOverviewViewSpec extends ViewBehaviours {
 
     behave like pageWithBackLink(applyView)
   }
+
 }

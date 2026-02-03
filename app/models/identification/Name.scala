@@ -19,9 +19,9 @@ package models.identification
 import play.api.libs.json.{Format, Json}
 
 case class Name(firstName: String, middleName: Option[String], lastName: String) {
-  lazy val displayName : String = firstName + " " + lastName
-  private val middleNameFormatted = middleName.fold(" ")(m => s" $m ")
-  lazy val displayFullName : String = firstName + middleNameFormatted + lastName
+  lazy val displayName: String     = firstName + " " + lastName
+  private val middleNameFormatted  = middleName.fold(" ")(m => s" $m ")
+  lazy val displayFullName: String = firstName + middleNameFormatted + lastName
 }
 
 object Name {
