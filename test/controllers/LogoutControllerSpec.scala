@@ -25,6 +25,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import java.net.URLEncoder
 
 class LogoutControllerSpec extends SpecBase with MockitoSugar {
 
@@ -40,13 +41,17 @@ class LogoutControllerSpec extends SpecBase with MockitoSugar {
           .configure("microservice.services.features.auditing.logout" -> true)
           .build()
 
+        val continueUrl = URLEncoder.encode(s"${frontendAppConfig.feedbackFrontendUrl}", "UTF-8")
+
+        val expectedUrl = s"${frontendAppConfig.logoutWithBasGatewayUrl}?continue=$continueUrl"
+
         val request = FakeRequest(GET, routes.LogoutController.logout().url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
+        redirectLocation(result).value mustBe expectedUrl
 
         verify(mockAuditConnector)
           .sendExplicitAudit(ArgumentMatchers.eq("estates"), any[Map[String, String]])(any(), any())
@@ -66,13 +71,17 @@ class LogoutControllerSpec extends SpecBase with MockitoSugar {
           .configure("microservice.services.features.auditing.logout" -> false)
           .build()
 
+        val continueUrl = URLEncoder.encode(s"${frontendAppConfig.feedbackFrontendUrl}", "UTF-8")
+
+        val expectedUrl = s"${frontendAppConfig.logoutWithBasGatewayUrl}?continue=$continueUrl"
+
         val request = FakeRequest(GET, routes.LogoutController.logout().url)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
+        redirectLocation(result).value mustBe expectedUrl
 
         verify(mockAuditConnector, never())
           .sendExplicitAudit(ArgumentMatchers.eq("estates"), any[Map[String, String]])(any(), any())
