@@ -16,21 +16,23 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import config.annotations.EstateRegistration
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import javax.inject.Inject
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.HaveUTRYesNoPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, ActionBuilder, AnyContent, MessagesControllerComponents}
+import play.api.mvc._
 import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AffinityGroup._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.HaveUTRYesNoView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class HaveUTRYesNoController @Inject() (
@@ -40,37 +42,114 @@ class HaveUTRYesNoController @Inject() (
   actions: Actions,
   formProvider: YesNoFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: HaveUTRYesNoView
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+  view: HaveUTRYesNoView,
+  config: FrontendAppConfig
+
+                                       )(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging{
+
 
   private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
 
   val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions() { implicit request =>
+  def onPageLoad(origin: Option[String]): Action[AnyContent] = actions() { implicit request =>
+
     val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, isOrgCredUser))
+    Ok(view(preparedForm, isOrgCredUser, origin))
   }
 
-  def onSubmit(): Action[AnyContent] = actions().async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        (formWithErrors: Form[_]) => Future.successful(BadRequest(view(formWithErrors, isOrgCredUser))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(HaveUTRYesNoPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(HaveUTRYesNoPage, updatedAnswers))
-      )
-  }
+  def onSubmit(origin: Option[String]): Action[AnyContent] =
+    actions().async { implicit request =>
+
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future.successful(
+              BadRequest(
+                view(
+                  formWithErrors,
+                  isOrgCredUser,
+                  origin
+                )
+              )
+            ),
+
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(
+                  request.userAnswers.set(
+                    HaveUTRYesNoPage,
+                    value
+                  )
+                )
+
+              _ <- sessionRepository.set(updatedAnswers)
+
+            } yield {
+
+              val nextRoute: Call =
+                origin match {
+
+                  case Some(originValue) if value =>
+                    routes.AreYouSureController
+                      .checkUTRForSure(Some(originValue))
+
+                  case Some(_) =>
+                    Call(
+                      "GET",
+                      s"${config.suitabilityUrl}?origin=checkyourAnswers"
+                    )
+
+                  case None =>
+                    navigator.nextPage(
+                      HaveUTRYesNoPage,
+                      updatedAnswers
+                    )
+                }
+
+              Redirect(nextRoute)
+            }
+        )
+    }
 
   private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean =
     request.affinityGroup == Organisation
+
+  import play.api.libs.json.Json
+
+  def getUTRFlag(): Action[AnyContent] =
+    actions.authWithSession.async { implicit request =>
+
+
+
+      println("In getUTRFlag hub")
+      logger.info("In getUTRFlag hub")
+      logger.warn("In getUTRFlag hub")
+      logger.debug("In getUTRFlag hub")
+      sessionRepository.get(request.internalId).map { userAnswersOption =>
+
+        val utrFlag: Boolean =
+          userAnswersOption
+            .flatMap { userAnswers =>
+              (userAnswers.data \ "estateRegisteredOnlineYesNo")
+                .asOpt[Boolean]
+            }
+            .getOrElse(false)
+
+
+        logger.info("utrFlag from hub "+ utrFlag)
+        logger.warn("utrFlag from hub "+ utrFlag)
+        logger.debug("utrFlag from hub "+ utrFlag)
+
+        Ok(Json.obj("utrFlag" -> utrFlag))
+      }
+    }
 
 }

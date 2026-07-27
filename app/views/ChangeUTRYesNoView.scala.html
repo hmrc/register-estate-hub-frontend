@@ -27,21 +27,21 @@
     submitButton: SubmitButton
 )
 
-@(form: Form[_], isOrgCredUser: Boolean, origin: Option[String])(implicit request: RequestHeader, messages: Messages)
+@(form: Form[_], isOrgCredUser: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("haveUtrYesNo.title")}",
+    title = s"${errorPrefix(form)}${messages("CheckUTRYesNo.title")}",
     showBackLink = true
 ) {
 
-    @formHelper(action = HaveUTRYesNoController.onSubmit(origin), Symbol("autoComplete") -> "off") {
+    @formHelper(action = AreYouSureController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors)
 
         @inputYesNo(
             field = form("value"),
-            label = messages("haveUtrYesNo.heading"),
-            hint = if(isOrgCredUser) Some(messages("haveUtrYesNo.hint")) else None
+            label = messages("CheckUTRYesNo.heading"),
+            hint = if(isOrgCredUser) Some(messages("CheckUTRYesNo.hint")) else None
         )
 
         @submitButton()

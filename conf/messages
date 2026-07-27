@@ -241,3 +241,9 @@ sign_out.heading = You have signed out
 sign_out.p1 = You can
 sign_out.link = sign in to register or manage an estate
 sign_out.p2 = You can create a new Government Gateway user ID for the estate when you register the estate.
+
+CheckUTRYesNo.title = Are you sure you want to change your answer?
+CheckUTRYesNo.heading = Are you sure you want to change your answer?
+CheckUTRYesNo.checkYourAnswersLabel = Are you sure you want to change your answer?
+CheckUTRYesNo.hint = By changing your answer you will lose the information you have provided
+CheckUTRYesNo.error.required = Select yes if you want to change your answer
