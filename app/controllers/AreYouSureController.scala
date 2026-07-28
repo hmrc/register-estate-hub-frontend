@@ -22,14 +22,14 @@ import controllers.actions.Actions
 import forms.YesNoFormProvider
 import models.requests.DataRequest
 import navigation.Navigator
-import pages.HaveUTRYesNoPage
+import pages.{AreYouSurePage, HaveUTRYesNoPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, ActionBuilder, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AffinityGroup._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ChangeUTRYesNoView
+import views.html.AreYouSureForUTRView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,21 +41,21 @@ class AreYouSureController @Inject()(
                                       actions: Actions,
                                       formProvider: YesNoFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
-                                      changeUTRYesNoView: ChangeUTRYesNoView,
+                                      areYouSureForUTRView: AreYouSureForUTRView,
                                       config: FrontendAppConfig
                                     )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = formProvider.withPrefix("sureForUTR")
+  val form: Form[Boolean] = formProvider.withPrefix("areYouSure")
 
-  def checkUTRForSure(origin: Option[String]): Action[AnyContent] = actions() { implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions() { implicit request =>
 
-    val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
+    val preparedForm = request.userAnswers.get(AreYouSurePage) match {
       case None => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(changeUTRYesNoView(preparedForm, isOrgCredUser))
+    Ok(areYouSureForUTRView(preparedForm, isOrgCredUser))
 
   }
 
@@ -73,7 +73,7 @@ class AreYouSureController @Inject()(
           formWithErrors =>
             Future.successful(
               BadRequest(
-                changeUTRYesNoView(
+                areYouSureForUTRView(
                   formWithErrors,
                   isOrgCredUser
                 )
@@ -84,13 +84,11 @@ class AreYouSureController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(
                 request.userAnswers.set(
-                  HaveUTRYesNoPage,
+                  AreYouSurePage,
                   value
                 )
               )
-
               _ <- sessionRepository.set(updatedAnswers)
-
             } yield {
               if (value) {
                 Redirect(

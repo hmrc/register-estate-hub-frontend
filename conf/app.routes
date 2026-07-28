@@ -61,7 +61,7 @@ GET        /declared-answers                            controllers.DeclaredAnsw
 
 GET        /sign-out-confirmed                          controllers.SignOutConfirmationController.onPageLoad
 
-GET        /utr-flag                                    controllers.HaveUTRYesNoController.getUTRFlag()
+GET        /utr-flag                                    controllers.api.APIForUTRFlagStatusController.getUTRFlag()
 
-GET       /are-you                                    controllers.AreYouSureController.checkUTRForSure(origin: Option[String])
-POST       /are-you                                    controllers.AreYouSureController.onSubmit()
+GET       /are-you-sure                                 controllers.AreYouSureController.onPageLoad()
+POST      /are-you-sure                                 controllers.AreYouSureController.onSubmit()

@@ -48,6 +48,7 @@ class HaveUTRYesNoController @Inject() (
                                        )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with Logging{
 
+  private val queryParmaValue = "suitability-check-your-answers"
 
   private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
 
@@ -63,8 +64,7 @@ class HaveUTRYesNoController @Inject() (
     Ok(view(preparedForm, isOrgCredUser, origin))
   }
 
-  def onSubmit(origin: Option[String]): Action[AnyContent] =
-    actions().async { implicit request =>
+  def onSubmit(origin: Option[String]): Action[AnyContent] =    actions().async { implicit request =>
 
       form
         .bindFromRequest()
@@ -97,15 +97,18 @@ class HaveUTRYesNoController @Inject() (
               val nextRoute: Call =
                 origin match {
 
-                  case Some(originValue) if value =>
+                  case Some(originValue) if originValue == queryParmaValue && value =>
                     routes.AreYouSureController
-                      .checkUTRForSure(Some(originValue))
+                      .onPageLoad()
 
-                  case Some(_) =>
+                  case Some(originValue) if originValue == queryParmaValue =>
                     Call(
                       "GET",
                       s"${config.suitabilityUrl}?origin=checkyourAnswers"
                     )
+
+                  case Some(_) =>
+                    controllers.routes.SessionExpiredController.onPageLoad
 
                   case None =>
                     navigator.nextPage(
@@ -124,29 +127,17 @@ class HaveUTRYesNoController @Inject() (
 
   import play.api.libs.json.Json
 
-  def getUTRFlag(): Action[AnyContent] =
-    actions.authWithSession.async { implicit request =>
+  def getUTRFlag(): Action[AnyContent] = actions.authWithData.async { implicit request =>
 
-
-
-      println("In getUTRFlag hub")
-      logger.info("In getUTRFlag hub")
-      logger.warn("In getUTRFlag hub")
-      logger.debug("In getUTRFlag hub")
       sessionRepository.get(request.internalId).map { userAnswersOption =>
 
         val utrFlag: Boolean =
           userAnswersOption
             .flatMap { userAnswers =>
-              (userAnswers.data \ "estateRegisteredOnlineYesNo")
+              (userAnswers.data \ "haveUtrYesNo")
                 .asOpt[Boolean]
             }
             .getOrElse(false)
-
-
-        logger.info("utrFlag from hub "+ utrFlag)
-        logger.warn("utrFlag from hub "+ utrFlag)
-        logger.debug("utrFlag from hub "+ utrFlag)
 
         Ok(Json.obj("utrFlag" -> utrFlag))
       }
