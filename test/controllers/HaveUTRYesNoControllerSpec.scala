@@ -34,7 +34,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
   val formProvider        = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
 
-  lazy val haveUTRRoute: String = routes.HaveUTRYesNoController.onPageLoad().url
+  lazy val haveUTRRoute: String = routes.HaveUTRYesNoController.onPageLoad(None).url
 
   "HaveUTR Controller" when {
 
@@ -54,7 +54,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, isOrgCredUser = true)(request, messages).toString
+          view(form, isOrgCredUser = true, None)(request, messages).toString
 
         application.stop()
       }
@@ -76,7 +76,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, isOrgCredUser = false)(request, messages).toString
+          view(form, isOrgCredUser = false, None)(request, messages).toString
 
         application.stop()
       }
@@ -97,7 +97,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), isOrgCredUser = true)(request, messages).toString
+        view(form.fill(true), isOrgCredUser = true, None)(request, messages).toString
 
       application.stop()
     }
@@ -143,7 +143,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, isOrgCredUser = true)(request, messages).toString
+        view(boundForm, isOrgCredUser = true, None)(request, messages).toString
 
       application.stop()
     }

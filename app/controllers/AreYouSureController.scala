@@ -34,24 +34,23 @@ import views.html.AreYouSureForUTRView
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AreYouSureController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      sessionRepository: SessionRepository,
-                                      @EstateRegistration navigator: Navigator,
-                                      actions: Actions,
-                                      formProvider: YesNoFormProvider,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      areYouSureForUTRView: AreYouSureForUTRView,
-                                      config: FrontendAppConfig
-                                    )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport {
+class AreYouSureController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  @EstateRegistration navigator: Navigator,
+  actions: Actions,
+  formProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  areYouSureForUTRView: AreYouSureForUTRView,
+  config: FrontendAppConfig
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = formProvider.withPrefix("areYouSure")
 
   def onPageLoad(): Action[AnyContent] = actions() { implicit request =>
-
     val preparedForm = request.userAnswers.get(AreYouSurePage) match {
-      case None => form
+      case None        => form
       case Some(value) => form.fill(value)
     }
 
@@ -66,7 +65,6 @@ class AreYouSureController @Inject()(
 
   def onSubmit(): Action[AnyContent] =
     actions().async { implicit request =>
-
       form
         .bindFromRequest()
         .fold(
@@ -79,17 +77,16 @@ class AreYouSureController @Inject()(
                 )
               )
             ),
-
           value =>
             for {
               updatedAnswers <- Future.fromTry(
-                request.userAnswers.set(
-                  AreYouSurePage,
-                  value
-                )
-              )
-              _ <- sessionRepository.set(updatedAnswers)
-            } yield {
+                                  request.userAnswers.set(
+                                    AreYouSurePage,
+                                    value
+                                  )
+                                )
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield
               if (value) {
                 Redirect(
                   navigator.nextPage(
@@ -102,7 +99,6 @@ class AreYouSureController @Inject()(
                   s"${config.suitabilityUrl}?origin=checkyourAnswers"
                 )
               }
-            }
         )
     }
 

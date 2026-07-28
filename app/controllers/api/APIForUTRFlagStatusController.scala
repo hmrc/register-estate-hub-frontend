@@ -27,19 +27,16 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class APIForUTRFlagStatusController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            sessionRepository: SessionRepository,
-                                            actions: Actions,
-                                            val controllerComponents: MessagesControllerComponents,
-                                          )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
-
+class APIForUTRFlagStatusController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
   def getUTRFlag(): Action[AnyContent] = actions.authWithData.async { implicit request =>
-
     sessionRepository.get(request.internalId).map { userAnswersOption =>
-
       val utrFlag: Boolean =
         userAnswersOption
           .flatMap { userAnswers =>

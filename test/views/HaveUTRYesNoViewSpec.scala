@@ -36,13 +36,13 @@ class HaveUTRYesNoViewSpec extends YesNoViewBehaviours {
     "org cred user" must {
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, isOrgCredUser = true)(fakeRequest, messages)
+        view.apply(form, isOrgCredUser = true, None)(fakeRequest, messages)
 
       behave like normalPage(applyView(form), messageKeyPrefix)
 
       behave like pageWithBackLink(applyView(form))
 
-      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.HaveUTRYesNoController.onSubmit().url)
+      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.HaveUTRYesNoController.onSubmit(None).url)
 
       behave like pageWithHint(form, applyView, s"$messageKeyPrefix.hint")
 
@@ -52,13 +52,13 @@ class HaveUTRYesNoViewSpec extends YesNoViewBehaviours {
     "non-org cred user" must {
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, isOrgCredUser = false)(fakeRequest, messages)
+        view.apply(form, isOrgCredUser = false, None)(fakeRequest, messages)
 
       behave like normalPage(applyView(form), messageKeyPrefix)
 
       behave like pageWithBackLink(applyView(form))
 
-      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.HaveUTRYesNoController.onSubmit().url)
+      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.HaveUTRYesNoController.onSubmit(None).url)
 
       behave like pageWithASubmitButton(applyView(form))
     }
