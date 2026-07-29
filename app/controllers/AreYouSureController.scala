@@ -68,36 +68,16 @@ class AreYouSureController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-            Future.successful(
-              BadRequest(
-                areYouSureForUTRView(
-                  formWithErrors,
-                  isOrgCredUser
-                )
-              )
-            ),
+          formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors, isOrgCredUser))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(
-                                  request.userAnswers.set(
-                                    AreYouSurePage,
-                                    value
-                                  )
-                                )
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
               _              <- sessionRepository.set(updatedAnswers)
             } yield
               if (value) {
-                Redirect(
-                  navigator.nextPage(
-                    HaveUTRYesNoPage,
-                    updatedAnswers
-                  )
-                )
+                Redirect(navigator.nextPage(HaveUTRYesNoPage, updatedAnswers))
               } else {
-                Redirect(
-                  s"${config.suitabilityUrl}?origin=checkyourAnswers"
-                )
+                Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
               }
         )
     }
