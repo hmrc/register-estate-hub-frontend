@@ -33,10 +33,10 @@ class AreYouSureForUTRViewSpec extends YesNoViewBehaviours {
 
   "AreYouSureForUTRView view" when {
 
-    "org cred user" must {
+    "user" must {
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, isOrgCredUser = true)(fakeRequest, messages)
+        view.apply(form)(fakeRequest, messages)
 
       behave like normalPage(applyView(form), messageKeyPrefix)
 
@@ -45,20 +45,6 @@ class AreYouSureForUTRViewSpec extends YesNoViewBehaviours {
       behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.AreYouSureController.onSubmit().url)
 
       behave like pageWithHint(form, applyView, s"$messageKeyPrefix.hint")
-
-      behave like pageWithASubmitButton(applyView(form))
-    }
-
-    "non-org cred user" must {
-
-      def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, isOrgCredUser = false)(fakeRequest, messages)
-
-      behave like normalPage(applyView(form), messageKeyPrefix)
-
-      behave like pageWithBackLink(applyView(form))
-
-      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.AreYouSureController.onSubmit().url)
 
       behave like pageWithASubmitButton(applyView(form))
     }

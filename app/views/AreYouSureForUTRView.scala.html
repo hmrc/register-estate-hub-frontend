@@ -27,7 +27,7 @@
     submitButton: SubmitButton
 )
 
-@(form: Form[_], isOrgCredUser: Boolean)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[_])(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("areYouSure.title")}",
@@ -41,7 +41,7 @@
         @inputYesNo(
             field = form("value"),
             label = messages("areYouSure.heading"),
-            hint = if(isOrgCredUser) Some(messages("areYouSure.hint")) else None
+            hint = Some(messages("areYouSure.hint"))
         )
 
         @submitButton()

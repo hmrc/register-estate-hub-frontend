@@ -54,21 +54,18 @@ class AreYouSureController @Inject() (
       case Some(value) => form.fill(value)
     }
 
-    Ok(areYouSureForUTRView(preparedForm, isOrgCredUser))
+    Ok(areYouSureForUTRView(preparedForm))
 
   }
 
   private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
-
-  private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean =
-    request.affinityGroup == Organisation
 
   def onSubmit(): Action[AnyContent] =
     actions().async { implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors, isOrgCredUser))),
+          formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
