@@ -68,7 +68,8 @@ class AreYouSureController @Inject() (
           formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
+              answersWithConfirmation <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
+              updatedAnswers <- Future.fromTry(answersWithConfirmation.set(HaveUTRYesNoPage, value))
               _              <- sessionRepository.set(updatedAnswers)
             } yield
               if (value) {
