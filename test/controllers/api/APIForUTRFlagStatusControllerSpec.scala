@@ -33,12 +33,12 @@ class APIForUTRFlagStatusControllerSpec extends SpecBase {
 
   "APIForUTRFlagStatusControllerSpec controller" must {
 
-    "return true when haveUtrYesNo is true" in {
+    "return true when areYouSure is true" in {
 
       val userAnswers = UserAnswers(
         "some-id",
         Json.obj(
-          "haveUtrYesNo" -> true
+          "areYouSure" -> true
         )
       )
 
@@ -58,11 +58,11 @@ class APIForUTRFlagStatusControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "return false when haveUtrYesNo is false" in {
+    "return false when areYouSure is false" in {
       val userAnswers = UserAnswers(
         "some-id",
         Json.obj(
-          "haveUtrYesNo" -> false
+          "areYouSure" -> false
         )
       )
 
@@ -82,7 +82,7 @@ class APIForUTRFlagStatusControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "return false when haveUtrYesNo is missing" in {
+    "return false when areYouSure is missing" in {
       val userAnswers = UserAnswers("some-id", Json.obj())
 
       val application: Application = getApplication(userAnswers)
