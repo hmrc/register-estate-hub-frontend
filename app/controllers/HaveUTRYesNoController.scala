@@ -16,21 +16,23 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import config.annotations.EstateRegistration
 import controllers.actions.Actions
 import forms.YesNoFormProvider
-import javax.inject.Inject
 import models.requests.DataRequest
 import navigation.Navigator
 import pages.HaveUTRYesNoPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, ActionBuilder, AnyContent, MessagesControllerComponents}
+import play.api.mvc._
 import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AffinityGroup._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.HaveUTRYesNoView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class HaveUTRYesNoController @Inject() (
@@ -40,33 +42,79 @@ class HaveUTRYesNoController @Inject() (
   actions: Actions,
   formProvider: YesNoFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: HaveUTRYesNoView
+  view: HaveUTRYesNoView,
+  config: FrontendAppConfig
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+    extends FrontendBaseController with I18nSupport with Logging {
+
+  private val queryParmaValue = "suitability-check-your-answers"
 
   private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
 
   val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions() { implicit request =>
+  def onPageLoad(origin: Option[String]): Action[AnyContent] = actions() { implicit request =>
     val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, isOrgCredUser))
+    Ok(view(preparedForm, isOrgCredUser, origin))
   }
 
-  def onSubmit(): Action[AnyContent] = actions().async { implicit request =>
+  def onSubmit(origin: Option[String]): Action[AnyContent] = actions().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        (formWithErrors: Form[_]) => Future.successful(BadRequest(view(formWithErrors, isOrgCredUser))),
+        formWithErrors =>
+          Future.successful(
+            BadRequest(
+              view(
+                formWithErrors,
+                isOrgCredUser,
+                origin
+              )
+            )
+          ),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(HaveUTRYesNoPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(HaveUTRYesNoPage, updatedAnswers))
+            updatedAnswers <-
+              Future.fromTry(
+                request.userAnswers.set(
+                  HaveUTRYesNoPage,
+                  value
+                )
+              )
+
+            _ <- sessionRepository.set(updatedAnswers)
+
+          } yield {
+
+            val nextRoute: Call =
+              origin match {
+
+                case Some(originValue) if originValue == queryParmaValue && value =>
+                  routes.AreYouSureController
+                    .onPageLoad()
+
+                case Some(originValue) if originValue == queryParmaValue =>
+                  Call(
+                    "GET",
+                    s"${config.suitabilityUrl}?origin=checkyourAnswers"
+                  )
+
+                case Some(_) =>
+                  controllers.routes.SessionExpiredController.onPageLoad
+
+                case None =>
+                  navigator.nextPage(
+                    HaveUTRYesNoPage,
+                    updatedAnswers
+                  )
+              }
+
+            Redirect(nextRoute)
+          }
       )
   }
 

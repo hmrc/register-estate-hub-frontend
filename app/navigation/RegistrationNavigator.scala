@@ -54,7 +54,7 @@ class RegistrationNavigator @Inject() (config: FrontendAppConfig) extends Naviga
       .getOrElse(controllers.routes.SessionExpiredController.onPageLoad)
 
   def routes(): PartialFunction[Page, UserAnswers => Call] = {
-    case EstateRegisteredOnlineYesNoPage => _ => controllers.routes.HaveUTRYesNoController.onPageLoad()
+    case EstateRegisteredOnlineYesNoPage => _ => controllers.routes.HaveUTRYesNoController.onPageLoad(None)
     case HaveUTRYesNoPage                => haveAUtrRoute
   }
 

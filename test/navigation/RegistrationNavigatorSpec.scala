@@ -31,7 +31,7 @@ class RegistrationNavigatorSpec extends SpecBase {
     "EstateRegisteredOnlineYesNo page -> HaveUTRYesNo page" in
       navigator
         .nextPage(EstateRegisteredOnlineYesNoPage, emptyUserAnswers)
-        .mustBe(controllers.routes.HaveUTRYesNoController.onPageLoad())
+        .mustBe(controllers.routes.HaveUTRYesNoController.onPageLoad(None))
 
     "registered online" must {
 

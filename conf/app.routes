@@ -16,8 +16,8 @@ GET        /cannot-change                               controllers.CannotMakeCh
 GET        /estate-registered-online                    controllers.EstateRegisteredOnlineYesNoController.onPageLoad()
 POST       /estate-registered-online                    controllers.EstateRegisteredOnlineYesNoController.onSubmit()
 
-GET        /have-utr                                    controllers.HaveUTRYesNoController.onPageLoad()
-POST       /have-utr                                    controllers.HaveUTRYesNoController.onSubmit()
+GET        /have-utr                                    controllers.HaveUTRYesNoController.onPageLoad(origin: Option[String])
+POST       /have-utr                                    controllers.HaveUTRYesNoController.onSubmit(origin: Option[String])
 
 GET        /must-register-estate                        controllers.MustRegisterEstateController.onPageLoad()
 
@@ -60,3 +60,8 @@ GET        /draft-answers                               controllers.DraftAnswers
 GET        /declared-answers                            controllers.DeclaredAnswersController.onPageLoad()
 
 GET        /sign-out-confirmed                          controllers.SignOutConfirmationController.onPageLoad
+
+GET        /utr-flag                                    controllers.api.APIForUTRFlagStatusController.getUTRFlag()
+
+GET       /are-you-sure                                 controllers.AreYouSureController.onPageLoad()
+POST      /are-you-sure                                 controllers.AreYouSureController.onSubmit()

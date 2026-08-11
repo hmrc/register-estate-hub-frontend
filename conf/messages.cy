@@ -233,3 +233,9 @@ sign_out.heading = Rydych wedi allgofnodi
 sign_out.p1 = Gallwch
 sign_out.link = mewngofnodi i gofrestru neu reoli ystâd
 sign_out.p2 = Gallwch greu Dynodydd Defnyddiwr (ID) newydd ar gyfer Porth y Llywodraeth ar gyfer yr ystâd pan fyddwch yn cofrestru’r ystâd.
+
+areYouSure.title = A ydych yn siŵr eich bod am newid eich ateb?
+areYouSure.heading = A ydych yn siŵr eich bod am newid eich ateb?
+areYouSure.checkYourAnswersLabel = A ydych yn siŵr eich bod am newid eich ateb?
+areYouSure.hint = Drwy newid eich ateb, byddwch yn colli’r wybodaeth rydych wedi’i rhoi
+areYouSure.error.required = Dewiswch ‘Iawn’ os ydych am newid eich ateb

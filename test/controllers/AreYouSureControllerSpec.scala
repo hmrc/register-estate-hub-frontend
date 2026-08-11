@@ -17,92 +17,48 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import config.annotations.EstateRegistration
 import forms.YesNoFormProvider
 import navigation.Navigator
-import pages.HaveUTRYesNoPage
+import pages.AreYouSurePage
 import play.api.data.Form
+import play.api.http.Status.OK
 import play.api.inject.bind
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test._
 import repositories.SessionRepository
-import uk.gov.hmrc.auth.core.AffinityGroup
-import views.html.HaveUTRYesNoView
 
-class HaveUTRYesNoControllerSpec extends SpecBase {
+class AreYouSureControllerSpec extends SpecBase {
+
+  lazy val areYouSureRoute: String = routes.AreYouSureController.onPageLoad().url
 
   val formProvider        = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
+  val form: Form[Boolean] = formProvider.withPrefix("areYouSure")
 
-  lazy val haveUTRRoute: String = routes.HaveUTRYesNoController.onPageLoad(None).url
+  "Are You Sure ControllerSpec" must {
 
-  "HaveUTR Controller" when {
+    "return OK and the correct view for a GET" in {
 
-    "org cred user" must {
-      "return OK and the correct view for a GET" in {
-
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), AffinityGroup.Organisation)
-          .overrides(bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator))
-          .build()
-
-        val request = FakeRequest(GET, haveUTRRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[HaveUTRYesNoView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form, isOrgCredUser = true, None)(request, messages).toString
-
-        application.stop()
-      }
-    }
-
-    "non-org cred user" must {
-      "return OK and the correct view for a GET" in {
-
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), AffinityGroup.Agent)
-          .overrides(bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator))
-          .build()
-
-        val request = FakeRequest(GET, haveUTRRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[HaveUTRYesNoView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form, isOrgCredUser = false, None)(request, messages).toString
-
-        application.stop()
-      }
-    }
-
-    "populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(HaveUTRYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(AreYouSurePage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, haveUTRRoute)
-
-      val view = application.injector.instanceOf[HaveUTRYesNoView]
+      val request = FakeRequest(GET, areYouSureRoute)
 
       val result = route(application, request).value
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view(form.fill(true), isOrgCredUser = true, None)(request, messages).toString
+      contentAsString(result) must include(
+        messages("areYouSure.heading")
+      )
 
       application.stop()
+
     }
 
-    "redirect to the next page when valid data is submitted" in {
+    "save the answer and redirect using navigator when user selects Yes" in {
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
@@ -114,7 +70,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
           .build()
 
       val request =
-        FakeRequest(POST, haveUTRRoute)
+        FakeRequest(POST, areYouSureRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
@@ -126,24 +82,45 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
+    "save the answer and redirect to suitability when user selects No" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          Seq(
+            bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
+            bind[SessionRepository].toInstance(sessionRepository)
+          )
+        )
+        .build()
+
+      val config = application.injector.instanceOf[FrontendAppConfig]
+
+      val request = FakeRequest(POST, areYouSureRoute)
+        .withFormUrlEncodedBody(
+          "value" -> "false"
+        )
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"${config.suitabilityUrl}?origin=checkyourAnswers"
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, haveUTRRoute)
+        FakeRequest(POST, areYouSureRoute)
           .withFormUrlEncodedBody(("value", ""))
-
-      val boundForm = form.bind(Map("value" -> ""))
-
-      val view = application.injector.instanceOf[HaveUTRYesNoView]
 
       val result = route(application, request).value
 
       status(result) mustEqual BAD_REQUEST
-
-      contentAsString(result) mustEqual
-        view(boundForm, isOrgCredUser = true, None)(request, messages).toString
 
       application.stop()
     }
@@ -152,7 +129,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(GET, haveUTRRoute)
+      val request = FakeRequest(GET, areYouSureRoute)
 
       val result = route(application, request).value
 
@@ -168,7 +145,7 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       val request =
-        FakeRequest(POST, haveUTRRoute)
+        FakeRequest(POST, areYouSureRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
@@ -179,7 +156,6 @@ class HaveUTRYesNoControllerSpec extends SpecBase {
 
       application.stop()
     }
-
   }
 
 }

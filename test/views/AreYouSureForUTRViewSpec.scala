@@ -21,44 +21,30 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.HaveUTRYesNoView
+import views.html.AreYouSureForUTRView
 
-class HaveUTRYesNoViewSpec extends YesNoViewBehaviours {
+class AreYouSureForUTRViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "haveUtrYesNo"
+  val messageKeyPrefix = "areYouSure"
 
-  val form: Form[Boolean] = new YesNoFormProvider().withPrefix("haveUtrYesNo")
+  val form: Form[Boolean] = new YesNoFormProvider().withPrefix("areYouSure")
 
-  val view: HaveUTRYesNoView = viewFor[HaveUTRYesNoView](Some(emptyUserAnswers))
+  val view: AreYouSureForUTRView = viewFor[AreYouSureForUTRView](Some(emptyUserAnswers))
 
-  "HaveUTRYesNo view" when {
+  "AreYouSureForUTRView view" when {
 
-    "org cred user" must {
+    "user" must {
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, isOrgCredUser = true, None)(fakeRequest, messages)
+        view.apply(form)(fakeRequest, messages)
 
       behave like normalPage(applyView(form), messageKeyPrefix)
 
       behave like pageWithBackLink(applyView(form))
 
-      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.HaveUTRYesNoController.onSubmit(None).url)
+      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.AreYouSureController.onSubmit().url)
 
       behave like pageWithHint(form, applyView, s"$messageKeyPrefix.hint")
-
-      behave like pageWithASubmitButton(applyView(form))
-    }
-
-    "non-org cred user" must {
-
-      def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, isOrgCredUser = false, None)(fakeRequest, messages)
-
-      behave like normalPage(applyView(form), messageKeyPrefix)
-
-      behave like pageWithBackLink(applyView(form))
-
-      behave like yesNoPage(form, applyView, messageKeyPrefix, None, routes.HaveUTRYesNoController.onSubmit(None).url)
 
       behave like pageWithASubmitButton(applyView(form))
     }
