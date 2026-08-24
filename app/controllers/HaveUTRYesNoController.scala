@@ -93,7 +93,7 @@ class HaveUTRYesNoController @Inject() (
             val nextRoute: Call =
               origin match {
 
-                case Some(originValue) if originValue == queryParmaValue  =>
+                case Some(originValue) if originValue == queryParmaValue =>
                   routes.AreYouSureController
                     .onPageLoad()
 
