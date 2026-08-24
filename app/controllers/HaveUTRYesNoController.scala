@@ -93,15 +93,9 @@ class HaveUTRYesNoController @Inject() (
             val nextRoute: Call =
               origin match {
 
-                case Some(originValue) if originValue == queryParmaValue && value =>
+                case Some(originValue) if originValue == queryParmaValue =>
                   routes.AreYouSureController
                     .onPageLoad()
-
-                case Some(originValue) if originValue == queryParmaValue =>
-                  Call(
-                    "GET",
-                    s"${config.suitabilityUrl}?origin=checkyourAnswers"
-                  )
 
                 case Some(_) =>
                   controllers.routes.SessionExpiredController.onPageLoad
