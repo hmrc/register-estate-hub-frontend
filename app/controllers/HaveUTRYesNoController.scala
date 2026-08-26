@@ -63,12 +63,10 @@ class HaveUTRYesNoController @Inject() (
         origin match {
           case Some(originValue) if originValue == queryParmaValue =>
             form.fill(false)
-          case _ =>
+          case _                                                   =>
             form.fill(value)
         }
-
     }
-
     Ok(view(preparedForm, isOrgCredUser, origin))
   }
 
