@@ -70,7 +70,6 @@ class AreYouSureController @Inject() (
             for {
               answersWithConfirmation <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
               updatedAnswers          <- Future.fromTry(answersWithConfirmation.set(HaveUTRYesNoPage, value))
-              _                       <- sessionRepository.set(updatedAnswers)
             } yield
               if (value) {
                 Redirect(navigator.nextPage(HaveUTRYesNoPage, updatedAnswers))

@@ -56,7 +56,13 @@ class HaveUTRYesNoController @Inject() (
   def onPageLoad(origin: Option[String]): Action[AnyContent] = actions() { implicit request =>
     val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
       case None        => form
-      case Some(value) => form.fill(value)
+      case Some(value) =>
+        // UCD request : we need to show no in UI when user clicks back btn
+        // from are you sure page, this only happens if the query param is present in url
+        if (origin == queryParmaValue)
+          form.fill(false)
+        else
+          form.fill(value)
     }
 
     Ok(view(preparedForm, isOrgCredUser, origin))
