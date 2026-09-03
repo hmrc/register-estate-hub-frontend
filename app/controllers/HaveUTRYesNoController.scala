@@ -66,49 +66,25 @@ class HaveUTRYesNoController @Inject() (
     form
       .bindFromRequest()
       .fold(
-        formWithErrors =>
-          Future.successful(
-            BadRequest(
-              view(
-                formWithErrors,
-                isOrgCredUser,
-                origin
-              )
-            )
-          ),
-        value =>
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isOrgCredUser, origin))),
+        currentValue => {
+          val previousValue = request.userAnswers.get(HaveUTRYesNoPage)
           for {
-            updatedAnswers <-
-              Future.fromTry(
-                request.userAnswers.set(
-                  HaveUTRYesNoPage,
-                  value
-                )
-              )
-
-            _ <- sessionRepository.set(updatedAnswers)
-
-          } yield {
-
-            val nextRoute: Call =
-              origin match {
-
-                case Some(originValue) if originValue == queryParmaValue =>
-                  routes.AreYouSureController
-                    .onPageLoad()
-
-                case Some(_) =>
-                  controllers.routes.SessionExpiredController.onPageLoad
-
-                case None =>
-                  navigator.nextPage(
-                    HaveUTRYesNoPage,
-                    updatedAnswers
-                  )
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(HaveUTRYesNoPage, currentValue))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield
+            if (origin.contains(queryParmaValue)) {
+              if (previousValue.contains(true) && currentValue) {
+                Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
+              } else {
+                Redirect(routes.AreYouSureController.onPageLoad())
               }
-
-            Redirect(nextRoute)
-          }
+            } else {
+              Redirect(
+                navigator.nextPage(HaveUTRYesNoPage, updatedAnswers)
+              )
+            }
+        }
       )
   }
 

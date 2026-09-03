@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import config.annotations.EstateRegistration
 import forms.YesNoFormProvider
 import navigation.Navigator
-import pages.AreYouSurePage
+import pages.{AreYouSurePage, HaveUTRYesNoPage}
 import play.api.data.Form
 import play.api.http.Status.OK
 import play.api.inject.bind
@@ -84,7 +84,9 @@ class AreYouSureControllerSpec extends SpecBase {
 
     "save the answer and redirect to suitability when user selects No" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val userAnswers = emptyUserAnswers.set(HaveUTRYesNoPage, false).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           Seq(
             bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
@@ -95,17 +97,13 @@ class AreYouSureControllerSpec extends SpecBase {
 
       val config = application.injector.instanceOf[FrontendAppConfig]
 
-      val request = FakeRequest(POST, areYouSureRoute)
-        .withFormUrlEncodedBody(
-          "value" -> "false"
-        )
+      val request = FakeRequest(POST, areYouSureRoute).withFormUrlEncodedBody("value" -> "false")
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual
-        s"${config.suitabilityUrl}?origin=checkyourAnswers"
+      redirectLocation(result).value mustEqual s"${config.suitabilityUrl}?origin=checkyourAnswers"
 
       application.stop()
     }

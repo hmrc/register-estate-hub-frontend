@@ -27,7 +27,6 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, ActionBuilder, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.auth.core.AffinityGroup._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AreYouSureForUTRView
 
@@ -58,8 +57,6 @@ class AreYouSureController @Inject() (
 
   }
 
-  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
-
   def onSubmit(): Action[AnyContent] =
     actions().async { implicit request =>
       form
@@ -68,16 +65,20 @@ class AreYouSureController @Inject() (
           formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors))),
           value =>
             for {
-              answersWithConfirmation <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
-              updatedAnswers          <- Future.fromTry(answersWithConfirmation.set(HaveUTRYesNoPage, value))
-              _                       <- sessionRepository.set(updatedAnswers)
-            } yield
-              if (value) {
-                Redirect(navigator.nextPage(HaveUTRYesNoPage, updatedAnswers))
-              } else {
-                Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
-              }
+              areYouSureFlag <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
+              result         <-
+                if (request.userAnswers.get(HaveUTRYesNoPage).contains(false)) {
+                  for {
+                    updatedAnswers <- Future.fromTry(areYouSureFlag.set(HaveUTRYesNoPage, !value))
+                    _              <- sessionRepository.set(updatedAnswers)
+                  } yield Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
+                } else {
+                  Future.successful(Redirect(navigator.nextPage(HaveUTRYesNoPage, areYouSureFlag)))
+                }
+            } yield result
         )
     }
+
+  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
 
 }
