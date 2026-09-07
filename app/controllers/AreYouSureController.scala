@@ -57,27 +57,34 @@ class AreYouSureController @Inject() (
 
   }
 
-  def onSubmit(): Action[AnyContent] =
-    actions().async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors))),
-          value =>
-            for {
-              areYouSureFlag <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
-              result         <-
-                if (request.userAnswers.get(HaveUTRYesNoPage).contains(false)) {
-                  for {
-                    updatedAnswers <- Future.fromTry(areYouSureFlag.set(HaveUTRYesNoPage, !value))
-                    _              <- sessionRepository.set(updatedAnswers)
-                  } yield Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
-                } else {
-                  Future.successful(Redirect(navigator.nextPage(HaveUTRYesNoPage, areYouSureFlag)))
-                }
-            } yield result
-        )
-    }
+  def onSubmit(): Action[AnyContent] = actions().async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors))),
+        areYouSure => {
+          val currentHaveUtr = request.userAnswers.get(HaveUTRYesNoPage).contains(true)
+          // Yes: keep the new answer
+          // No: return to the previous answer
+          val finalHaveUtr   = if (areYouSure) currentHaveUtr else !currentHaveUtr
+
+          for {
+            answersWithConfirmation <- Future.fromTry(request.userAnswers.set(AreYouSurePage, areYouSure))
+            updatedAnswers          <- Future.fromTry(answersWithConfirmation.set(HaveUTRYesNoPage, finalHaveUtr))
+            _                       <- sessionRepository.set(updatedAnswers)
+          } yield
+            if (areYouSure && currentHaveUtr) {
+              Redirect(
+                navigator.nextPage(HaveUTRYesNoPage, updatedAnswers)
+              )
+            } else {
+              Redirect(
+                s"${config.suitabilityUrl}?origin=checkyourAnswers"
+              )
+            }
+        }
+      )
+  }
 
   private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
 

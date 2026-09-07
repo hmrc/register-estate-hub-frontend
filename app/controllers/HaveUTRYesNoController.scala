@@ -47,11 +47,8 @@ class HaveUTRYesNoController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with Logging {
 
+  val form: Form[Boolean]     = formProvider.withPrefix("haveUtrYesNo")
   private val queryParmaValue = "suitability-check-your-answers"
-
-  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
-
-  val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
 
   def onPageLoad(origin: Option[String]): Action[AnyContent] = actions() { implicit request =>
     val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
@@ -62,6 +59,11 @@ class HaveUTRYesNoController @Inject() (
     Ok(view(preparedForm, isOrgCredUser, origin))
   }
 
+  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
+
+  private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean =
+    request.affinityGroup == Organisation
+
   def onSubmit(origin: Option[String]): Action[AnyContent] = actions().async { implicit request =>
     form
       .bindFromRequest()
@@ -69,26 +71,24 @@ class HaveUTRYesNoController @Inject() (
         formWithErrors => Future.successful(BadRequest(view(formWithErrors, isOrgCredUser, origin))),
         currentValue => {
           val previousValue = request.userAnswers.get(HaveUTRYesNoPage)
+
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(HaveUTRYesNoPage, currentValue))
             _              <- sessionRepository.set(updatedAnswers)
           } yield
-            if (origin.contains(queryParmaValue)) {
-              if (previousValue.contains(true) && currentValue) {
-                Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
-              } else {
-                Redirect(routes.AreYouSureController.onPageLoad())
-              }
-            } else {
+            if (!origin.contains(queryParmaValue)) {
               Redirect(
                 navigator.nextPage(HaveUTRYesNoPage, updatedAnswers)
               )
+            } else if (previousValue.contains(currentValue)) {
+              // The answer has not changed
+              Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
+            } else {
+              // The answer has changed
+              Redirect(routes.AreYouSureController.onPageLoad())
             }
         }
       )
   }
-
-  private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean =
-    request.affinityGroup == Organisation
 
 }

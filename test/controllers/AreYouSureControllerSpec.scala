@@ -59,24 +59,25 @@ class AreYouSureControllerSpec extends SpecBase {
     }
 
     "save the answer and redirect using navigator when user selects Yes" in {
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            Seq(
-              bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
-              bind[SessionRepository].toInstance(sessionRepository)
-            )
+
+      val userAnswers = emptyUserAnswers.set(HaveUTRYesNoPage, true).get
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          Seq(
+            bind[Navigator].qualifiedWith(classOf[EstateRegistration]).toInstance(fakeNavigator),
+            bind[SessionRepository].toInstance(sessionRepository)
           )
-          .build()
+        )
+        .build()
 
       val request =
         FakeRequest(POST, areYouSureRoute)
-          .withFormUrlEncodedBody(("value", "true"))
+          .withFormUrlEncodedBody("value" -> "true")
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
-
       redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
 
       application.stop()
