@@ -40,7 +40,7 @@ class APIForUTRFlagStatusController @Inject() (
       val utrFlag: Boolean =
         userAnswersOption
           .flatMap { userAnswers =>
-            (userAnswers.data \ "areYouSure")
+            (userAnswers.data \ "haveUtrYesNo")
               .asOpt[Boolean]
           }
           .getOrElse(false)

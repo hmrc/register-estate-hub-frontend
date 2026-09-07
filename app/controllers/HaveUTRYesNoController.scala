@@ -47,11 +47,8 @@ class HaveUTRYesNoController @Inject() (
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with Logging {
 
+  val form: Form[Boolean]     = formProvider.withPrefix("haveUtrYesNo")
   private val queryParmaValue = "suitability-check-your-answers"
-
-  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
-
-  val form: Form[Boolean] = formProvider.withPrefix("haveUtrYesNo")
 
   def onPageLoad(origin: Option[String]): Action[AnyContent] = actions() { implicit request =>
     val preparedForm = request.userAnswers.get(HaveUTRYesNoPage) match {
@@ -62,57 +59,36 @@ class HaveUTRYesNoController @Inject() (
     Ok(view(preparedForm, isOrgCredUser, origin))
   }
 
+  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
+
+  private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean =
+    request.affinityGroup == Organisation
+
   def onSubmit(origin: Option[String]): Action[AnyContent] = actions().async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors =>
-          Future.successful(
-            BadRequest(
-              view(
-                formWithErrors,
-                isOrgCredUser,
-                origin
-              )
-            )
-          ),
-        value =>
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, isOrgCredUser, origin))),
+        currentValue => {
+          val previousValue = request.userAnswers.get(HaveUTRYesNoPage)
+
           for {
-            updatedAnswers <-
-              Future.fromTry(
-                request.userAnswers.set(
-                  HaveUTRYesNoPage,
-                  value
-                )
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(HaveUTRYesNoPage, currentValue))
+            _              <- sessionRepository.set(updatedAnswers)
+          } yield
+            if (!origin.contains(queryParmaValue)) {
+              Redirect(
+                navigator.nextPage(HaveUTRYesNoPage, updatedAnswers)
               )
-
-            _ <- sessionRepository.set(updatedAnswers)
-
-          } yield {
-
-            val nextRoute: Call =
-              origin match {
-
-                case Some(originValue) if originValue == queryParmaValue =>
-                  routes.AreYouSureController
-                    .onPageLoad()
-
-                case Some(_) =>
-                  controllers.routes.SessionExpiredController.onPageLoad
-
-                case None =>
-                  navigator.nextPage(
-                    HaveUTRYesNoPage,
-                    updatedAnswers
-                  )
-              }
-
-            Redirect(nextRoute)
-          }
+            } else if (previousValue.contains(currentValue)) {
+              // The answer has not changed
+              Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
+            } else {
+              // The answer has changed
+              Redirect(routes.AreYouSureController.onPageLoad())
+            }
+        }
       )
   }
-
-  private def isOrgCredUser(implicit request: DataRequest[AnyContent]): Boolean =
-    request.affinityGroup == Organisation
 
 }

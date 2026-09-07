@@ -27,7 +27,6 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, ActionBuilder, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.auth.core.AffinityGroup._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.AreYouSureForUTRView
 
@@ -58,26 +57,35 @@ class AreYouSureController @Inject() (
 
   }
 
-  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
+  def onSubmit(): Action[AnyContent] = actions().async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors))),
+        areYouSure => {
+          val currentHaveUtr = request.userAnswers.get(HaveUTRYesNoPage).contains(true)
+          // Yes: keep the new answer
+          // No: return to the previous answer
+          val finalHaveUtr   = if (areYouSure) currentHaveUtr else !currentHaveUtr
 
-  def onSubmit(): Action[AnyContent] =
-    actions().async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(areYouSureForUTRView(formWithErrors))),
-          value =>
-            for {
-              answersWithConfirmation <- Future.fromTry(request.userAnswers.set(AreYouSurePage, value))
-              updatedAnswers          <- Future.fromTry(answersWithConfirmation.set(HaveUTRYesNoPage, value))
-              _                       <- sessionRepository.set(updatedAnswers)
-            } yield
-              if (value) {
-                Redirect(navigator.nextPage(HaveUTRYesNoPage, updatedAnswers))
-              } else {
-                Redirect(s"${config.suitabilityUrl}?origin=checkyourAnswers")
-              }
-        )
-    }
+          for {
+            answersWithConfirmation <- Future.fromTry(request.userAnswers.set(AreYouSurePage, areYouSure))
+            updatedAnswers          <- Future.fromTry(answersWithConfirmation.set(HaveUTRYesNoPage, finalHaveUtr))
+            _                       <- sessionRepository.set(updatedAnswers)
+          } yield
+            if (areYouSure && currentHaveUtr) {
+              Redirect(
+                navigator.nextPage(HaveUTRYesNoPage, updatedAnswers)
+              )
+            } else {
+              Redirect(
+                s"${config.suitabilityUrl}?origin=checkyourAnswers"
+              )
+            }
+        }
+      )
+  }
+
+  private def actions(): ActionBuilder[DataRequest, AnyContent] = actions.authWithData
 
 }
